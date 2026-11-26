@@ -1,0 +1,336 @@
+{
+  "_note": "Editable content for the trust section, pricing page and service pages. Anything inside [ square brackets ] is a placeholder and is shown muted on the site. Run python3 build.py after editing.",
+  "stats": [
+    {
+      "value": "16+",
+      "label": "Years of experience"
+    },
+    {
+      "value": "[ 000 ]",
+      "label": "Projects delivered"
+    },
+    {
+      "value": "02",
+      "label": "Revision rounds included"
+    },
+    {
+      "value": "[ 00 ]",
+      "label": "Repeat clients"
+    }
+  ],
+  "clients": [
+    "[ Client 01 ]",
+    "[ Client 02 ]",
+    "[ Client 03 ]",
+    "[ Client 04 ]",
+    "[ Client 05 ]",
+    "[ Client 06 ]"
+  ],
+  "testimonials": [
+    {
+      "quote": "[ Two or three sentences from a client about the collaboration, the quality of the images and how smooth delivery was. ]",
+      "name": "[ Name Surname ]",
+      "role": "[ Role — Company ]"
+    },
+    {
+      "quote": "[ A second testimonial, ideally from a different kind of client: an architect, a developer or an interior designer. ]",
+      "name": "[ Name Surname ]",
+      "role": "[ Role — Company ]"
+    },
+    {
+      "quote": "[ A third one about communication, deadlines or a result that helped sell or approve a project. ]",
+      "name": "[ Name Surname ]",
+      "role": "[ Role — Company ]"
+    }
+  ],
+  "pricing": {
+    "intro": "Every project is quoted individually. These are the formats I work in, with a starting point so you can plan a budget before writing to me.",
+    "tiers": [
+      {
+        "name": "Single still",
+        "desc": "One image, one view: exterior or interior.",
+        "includes": [
+          "1 camera view",
+          "High-resolution file for print and web",
+          "2 revision rounds"
+        ],
+        "from": "[ from €000 ]",
+        "time": "[ 0–0 working days ]"
+      },
+      {
+        "name": "Project pack",
+        "desc": "4 to 6 images for a house or a small building.",
+        "includes": [
+          "Exterior and/or interior views",
+          "Consistent light and atmosphere",
+          "2 revision rounds"
+        ],
+        "from": "[ from €000 ]",
+        "time": "[ 0–0 weeks ]"
+      },
+      {
+        "name": "Animation",
+        "desc": "A Full HD walkthrough or flythrough.",
+        "includes": [
+          "Shot list agreed beforehand",
+          "Full HD MP4",
+          "2 revision rounds"
+        ],
+        "from": "[ from €000 ]",
+        "time": "[ 0–0 weeks ]"
+      },
+      {
+        "name": "Sales kit",
+        "desc": "Plans, infographics and assets for a development.",
+        "includes": [
+          "Colour floor plans",
+          "Infographics",
+          "Print and web files"
+        ],
+        "from": "[ from €000 ]",
+        "time": "[ 0–0 weeks ]"
+      }
+    ],
+    "factors": [
+      [
+        "Number of images",
+        "Each additional view shares the same model and materials, so it costs less than the first."
+      ],
+      [
+        "Model and complexity",
+        "A ready 3D model saves time. Complex geometry, landscaping or furnishing adds it."
+      ],
+      [
+        "Photo-integration",
+        "Placing the building in a real photograph needs the photo and a site reference."
+      ],
+      [
+        "Deadline",
+        "Tight schedules are possible but may change the price. Tell me the date at the start."
+      ]
+    ],
+    "included": [
+      "Direct contact with me from the first reference to the final delivery",
+      "Framings approved before the final renders",
+      "Two revision rounds",
+      "High-resolution files ready for print and web"
+    ],
+    "needs": [
+      "Plans (DWG or PDF), elevations and sections",
+      "Material and finish specification",
+      "Location and, if possible, a site photograph or drone view",
+      "References for mood, furniture or landscaping",
+      "Deadline and where the images will be used"
+    ],
+    "extras": [
+      [
+        "Extra view of an existing scene",
+        "Another camera in a scene that is already built.",
+        "[ +€00 ]"
+      ],
+      [
+        "Alternative time of day or material option",
+        "The same view at dusk, or with a different finish.",
+        "[ +€00 ]"
+      ],
+      [
+        "Additional revision round",
+        "Beyond the two included rounds.",
+        "[ +€00 ]"
+      ],
+      [
+        "Poster-size output",
+        "Files above 8000 px for large-format printing.",
+        "[ +€00 ]"
+      ],
+      [
+        "Rush delivery",
+        "When the schedule is tighter than usual.",
+        "[ +00 % ]"
+      ],
+      [
+        "Extra animation time",
+        "Per additional 10 seconds of film.",
+        "[ +€00 ]"
+      ]
+    ]
+  },
+  "services": [
+    {
+      "slug": "exterior-visualization",
+      "short": "Exteriors",
+      "title": "Exterior architectural visualization",
+      "meta": "Photorealistic exterior renders for architects and developers: facades, surroundings and photo-integration, by dsgn·dm archviz in Santander, Spain.",
+      "lead": "Images that place the building in its real context — light, vegetation, scale and street — before a single brick is laid.",
+      "includes": [
+        "Photorealistic stills for print and web",
+        "Day, dusk or night scenes",
+        "Photo-integration into the real site",
+        "Landscape, vegetation and people at the right scale",
+        "Street-level and aerial cameras",
+        "Colour and material studies"
+      ],
+      "usefulFor": [
+        "Planning and competition submissions",
+        "Pre-sales and marketing of developments",
+        "Presentations to clients and neighbours",
+        "Design reviews between architect and developer"
+      ],
+      "types": [
+        "Exterior",
+        "Residential",
+        "Commercial"
+      ],
+      "faqs": [
+        [
+          "Can you work from a drone photo or site photograph?",
+          "Yes. A photograph of the real plot lets me match light and perspective so the building sits naturally in its surroundings."
+        ],
+        [
+          "How many images does a project usually need?",
+          "Often two to four exterior views: a main one at eye level, an aerial or approach view and one alternative or detail. We settle this in the brief."
+        ]
+      ]
+    },
+    {
+      "slug": "interior-visualization",
+      "short": "Interiors",
+      "title": "Interior visualization",
+      "meta": "Interior renders that validate materials, furniture and light before construction. Architectural visualization by dsgn·dm archviz, Santander.",
+      "lead": "Furnished, lit and styled spaces that let your client understand — and approve — an interior before anything is bought or built.",
+      "includes": [
+        "Furnished rooms with honest materials",
+        "Daylight and artificial lighting scenarios",
+        "Material and furniture alternatives",
+        "Close-up views of the finishes",
+        "View planning based on your floor plans",
+        "Retouching and colour grading"
+      ],
+      "usefulFor": [
+        "Validating a design with the client",
+        "Selling off-plan homes",
+        "Interior design proposals",
+        "Retail, hospitality and showroom concepts"
+      ],
+      "types": [
+        "Interiors",
+        "Residential",
+        "Commercial"
+      ],
+      "faqs": [
+        [
+          "Do you choose the furniture?",
+          "I can propose it from catalogues or model the pieces your designer specifies. Either way, we agree the selection before rendering."
+        ],
+        [
+          "Can I see two material options?",
+          "Yes. Once the scene is built, alternatives of the same view are quick to produce, and we define them in the proposal."
+        ]
+      ]
+    },
+    {
+      "slug": "architectural-animation",
+      "short": "Animation",
+      "title": "Architectural animation",
+      "meta": "Full HD architectural walkthroughs and flythroughs with calm, deliberate camera work. dsgn·dm archviz, Santander, Spain.",
+      "lead": "Walkthroughs and flythroughs that show a building in motion, with calm camera work that follows the way people will actually move through it.",
+      "includes": [
+        "Full HD walkthroughs and flythroughs",
+        "Calm, deliberate camera moves",
+        "Day-to-dusk transitions",
+        "Titles and your music, if you provide them",
+        "MP4 plus a lighter web version",
+        "Stills extracted from the film"
+      ],
+      "usefulFor": [
+        "Sales launches and promotion websites",
+        "Competition and public presentations",
+        "Investor and board presentations",
+        "Short teasers for social media"
+      ],
+      "types": [
+        "Animation"
+      ],
+      "faqs": [
+        [
+          "How long can the video be?",
+          "Most are between 30 and 90 seconds. Length and number of shots drive both time and price, so we define the shot list in the brief."
+        ],
+        [
+          "Can you animate people and cars?",
+          "Yes, where they add life to the scene. They are kept subtle so the architecture remains the protagonist."
+        ]
+      ]
+    },
+    {
+      "slug": "real-estate-sales-material",
+      "short": "Sales material",
+      "title": "Sales material for real estate",
+      "meta": "Colour floor plans, infographics and visual assets for real estate promotions. dsgn·dm archviz, Santander, Spain.",
+      "lead": "Colour floor plans, infographics and assets that turn a development into something easy to understand, present and sell.",
+      "includes": [
+        "Colour floor plans and unit plans",
+        "Infographics with areas, orientation and amenities",
+        "Artwork for site hoardings and brochures",
+        "Assets for property portals and promotion websites",
+        "One consistent look across every piece",
+        "Print-ready and web files"
+      ],
+      "usefulFor": [
+        "Off-plan developments",
+        "Refurbishments and conversions",
+        "Promoters and estate agents",
+        "Architecture studios presenting a scheme"
+      ],
+      "types": [
+        "Residential",
+        "Commercial"
+      ],
+      "faqs": [
+        [
+          "Can you work from the architect's CAD plans?",
+          "Yes. DWG or PDF plans are the usual starting point, and I redraw them into a clean, readable layout."
+        ],
+        [
+          "Do you design the brochure itself?",
+          "I produce the plans and visual assets and can lay out simple pieces. For larger brand pieces I deliver everything ready for your designer to place."
+        ]
+      ]
+    },
+    {
+      "slug": "3d-visualization-santander",
+      "short": "Santander & Cantabria",
+      "title": "3D architectural visualization in Santander & Cantabria",
+      "meta": "3D architectural visualization studio in Santander, Cantabria: renders, animation and sales material for architects, developers and interior designers.",
+      "lead": "A local studio for architects, developers and interior designers in Cantabria, with a workflow that works just as well anywhere else in Spain.",
+      "includes": [
+        "Exterior and interior stills",
+        "Architectural animation",
+        "Colour plans and sales material",
+        "Meetings in Santander when they help the brief",
+        "A fully remote workflow for everything else"
+      ],
+      "usefulFor": [
+        "Architecture studios in Santander, Torrelavega and across Cantabria",
+        "Developers launching off-plan promotions",
+        "Interior designers and renovation companies",
+        "Projects in Asturias, the Basque Country and the rest of Spain"
+      ],
+      "types": [
+        "Residential",
+        "Exterior",
+        "Interiors"
+      ],
+      "faqs": [
+        [
+          "Do you work with clients outside Cantabria?",
+          "Yes. Brief, approvals and delivery all work remotely, so location is not a limit."
+        ],
+        [
+          "Can we meet in person?",
+          "Of course, in Santander and nearby when it helps with the brief. Otherwise calls and shared folders keep things moving."
+        ]
+      ]
+    }
+  ]
+}

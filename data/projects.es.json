@@ -1,0 +1,29 @@
+{
+  "_note": "Spanish texts per project folder. Titles stay in English (they live in projects.json). Only summary, brief and approach are translated.",
+  "01-collective-housing": {
+    "summary": "Un bloque residencial leído a través del volumen, la luz y la calle.",
+    "brief": "Un bloque residencial que había que entender antes de construirlo: su volumen, su relación con la calle y la calidad de sus viviendas.",
+    "approach": "Las imágenes se construyen alrededor de una luz de última hora de la tarde que hace legibles los materiales, con alturas de cámara elegidas según cómo verán realmente el edificio las personas. Los interiores se amueblan para el uso real, no para un catálogo."
+  },
+  "02-private-house": {
+    "summary": "Paisaje e interior tratados como una única escena.",
+    "brief": "Una vivienda unifamiliar en la que paisaje e interior debían sentirse como una sola escena, con una atmósfera tranquila y cálida.",
+    "approach": "Los encuadres siguen la intención del arquitecto: vistas largas a través de los cristales, materiales honestos y luz diurna suave, con una vegetación modelada según el proyecto de paisajismo."
+  },
+  "03-interior-design": {
+    "summary": "Materiales, mobiliario y luz natural compuestos estancia a estancia.",
+    "brief": "Una propuesta de interiorismo para validar materiales, mobiliario e iluminación con el cliente antes de comprar o construir nada.",
+    "approach": "Cada estancia se compone como una pequeña serie de vistas: un plano general para leer el espacio y otros más cercanos para los acabados que sostienen el diseño."
+  },
+  "04-public-building": {
+    "summary": "Imágenes y un recorrido virtual para una escala cívica mayor.",
+    "brief": "Un edificio de gran escala presentado mediante imágenes y un recorrido virtual, centrado en la orientación, la circulación y la imagen que proyecta en su contexto.",
+    "approach": "El recorrido sigue la ruta del visitante, desde la aproximación hasta el acceso y los espacios interiores clave, con movimientos de cámara pausados y entrega en Full HD."
+  },
+  "05-renovation": {"summary": "Una reforma de vivienda visualizada antes del primer día de obra."},
+  "06-retail-space": {"summary": "Un local comercial con identidad propia y materiales cuidadosamente elegidos."},
+  "07-facade": {"summary": "Una fachada integrada fotográficamente en su contexto urbano real."},
+  "08-kitchen": {"summary": "Cocina y zona de estar con luz natural."},
+  "09-landscape": {"summary": "Un espacio exterior y su vegetación al anochecer."},
+  "10-walkthrough": {"summary": "Un recorrido virtual animado de un edificio en Full HD."}
+}

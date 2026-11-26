@@ -1,0 +1,283 @@
+{
+  "_note": "Page URL = folder name (projects/<folder>.html). Edit here, then run: python3 build.py (pages) and python3 tools/make_placeholders.py (missing placeholders). Image files live in assets/projects/<folder>/. Gallery layouts are lists of 'kinds' (see 'kinds' below); each row should add up to 12 columns.",
+  "kinds": {
+    "full": {
+      "span": 12,
+      "w": 2400,
+      "h": 1350,
+      "ratio": "16:9"
+    },
+    "wide": {
+      "span": 8,
+      "w": 2000,
+      "h": 1125,
+      "ratio": "16:9"
+    },
+    "half": {
+      "span": 6,
+      "w": 1800,
+      "h": 1200,
+      "ratio": "3:2"
+    },
+    "tall": {
+      "span": 4,
+      "w": 1200,
+      "h": 1500,
+      "ratio": "4:5"
+    }
+  },
+  "projects": [
+    {
+      "folder": "01-collective-housing",
+      "tier": "major",
+      "title": "Collective Housing 01",
+      "type": "Residential",
+      "year": "2026",
+      "location": "Spain",
+      "client": "—",
+      "software": "3ds Max · Corona",
+      "summary": "A residential block read through volume, light and street.",
+      "card": {
+        "w": 2000,
+        "h": 1125,
+        "ratio": "16:9"
+      },
+      "brief": "A residential block that had to be understood before construction: its volume, its relationship with the street and the quality of its homes.",
+      "approach": "The images are built around a late-afternoon light that makes materials legible, with camera heights chosen to match how people will actually see the building. Interiors are furnished for real use, not for a catalogue.",
+      "video": {
+        "src": "",
+        "embed": ""
+      },
+      "passes": true,
+      "exterior": [
+        "full",
+        "half",
+        "half",
+        "wide",
+        "tall"
+      ],
+      "interior": [
+        "half",
+        "half",
+        "wide",
+        "tall"
+      ]
+    },
+    {
+      "folder": "02-private-house",
+      "tier": "major",
+      "title": "Private House 02",
+      "type": "Residential",
+      "year": "2026",
+      "location": "Spain",
+      "client": "—",
+      "software": "3ds Max · Corona",
+      "summary": "Landscape and interior treated as a single scene.",
+      "card": {
+        "w": 1200,
+        "h": 1500,
+        "ratio": "4:5"
+      },
+      "brief": "A private house where landscape and interior had to feel like one scene, with a calm and warm atmosphere.",
+      "approach": "Framings follow the architect’s intent: long views through glazing, honest materials and soft daylight, with vegetation modelled to match the planned landscape design.",
+      "video": null,
+      "passes": false,
+      "exterior": [
+        "wide",
+        "tall",
+        "half",
+        "half"
+      ],
+      "interior": [
+        "full",
+        "half",
+        "half",
+        "tall",
+        "tall",
+        "tall"
+      ]
+    },
+    {
+      "folder": "03-interior-design",
+      "tier": "major",
+      "title": "Interior Design 03",
+      "type": "Interiors",
+      "year": "2026",
+      "location": "Spain",
+      "client": "—",
+      "software": "3ds Max · D5 Render",
+      "summary": "Materials, furniture and daylight composed room by room.",
+      "card": {
+        "w": 1200,
+        "h": 1500,
+        "ratio": "4:5"
+      },
+      "brief": "An interior proposal to validate materials, furniture and lighting with the client before anything was bought or built.",
+      "approach": "Each room is composed as a short series of views: one wide frame to read the space and closer ones for the finishes that carry the design.",
+      "video": null,
+      "passes": false,
+      "exterior": [],
+      "interior": [
+        "full",
+        "half",
+        "half",
+        "tall",
+        "tall",
+        "tall",
+        "full"
+      ]
+    },
+    {
+      "folder": "04-public-building",
+      "tier": "major",
+      "title": "Public Building 04",
+      "type": "Commercial",
+      "year": "2025",
+      "location": "Spain",
+      "client": "—",
+      "software": "3ds Max · D5 Render",
+      "summary": "Stills and a walkthrough for a larger civic scale.",
+      "card": {
+        "w": 1800,
+        "h": 1200,
+        "ratio": "3:2"
+      },
+      "brief": "A larger building presented through stills and a walkthrough, focused on orientation, circulation and the image it projects in its context.",
+      "approach": "The walkthrough follows the visitor’s route, from approach to entrance to the key interior spaces, with calm camera moves and a Full HD delivery.",
+      "video": {
+        "src": "",
+        "embed": ""
+      },
+      "passes": false,
+      "exterior": [
+        "full",
+        "half",
+        "half",
+        "wide",
+        "tall"
+      ],
+      "interior": [
+        "half",
+        "half"
+      ]
+    },
+    {
+      "folder": "05-renovation",
+      "tier": "minor",
+      "title": "Renovation 05",
+      "type": "Residential",
+      "year": "2026",
+      "location": "Spain",
+      "client": "—",
+      "software": "3ds Max · Corona",
+      "summary": "A home renovation visualized before the first day on site.",
+      "video": null,
+      "passes": false,
+      "exterior": [],
+      "interior": [
+        "full",
+        "half",
+        "half"
+      ]
+    },
+    {
+      "folder": "06-retail-space",
+      "tier": "minor",
+      "title": "Retail Space 06",
+      "type": "Commercial",
+      "year": "2025",
+      "location": "Spain",
+      "client": "—",
+      "software": "3ds Max · Corona",
+      "summary": "A retail space with its own identity and carefully chosen materials.",
+      "video": null,
+      "passes": false,
+      "exterior": [],
+      "interior": [
+        "half",
+        "half",
+        "full"
+      ]
+    },
+    {
+      "folder": "07-facade",
+      "tier": "minor",
+      "title": "Facade 07",
+      "type": "Exterior",
+      "year": "2025",
+      "location": "Spain",
+      "client": "—",
+      "software": "3ds Max · Corona",
+      "summary": "A facade photo-integrated into its real urban context.",
+      "video": null,
+      "passes": false,
+      "exterior": [
+        "full",
+        "half",
+        "half"
+      ],
+      "interior": []
+    },
+    {
+      "folder": "08-kitchen",
+      "tier": "minor",
+      "title": "Kitchen 08",
+      "type": "Interiors",
+      "year": "2025",
+      "location": "Spain",
+      "client": "—",
+      "software": "3ds Max · Corona",
+      "summary": "Kitchen and living area with natural light.",
+      "video": null,
+      "passes": false,
+      "exterior": [],
+      "interior": [
+        "wide",
+        "tall",
+        "half",
+        "half"
+      ]
+    },
+    {
+      "folder": "09-landscape",
+      "tier": "minor",
+      "title": "Landscape 09",
+      "type": "Exterior",
+      "year": "2024",
+      "location": "Spain",
+      "client": "—",
+      "software": "3ds Max · D5 Render",
+      "summary": "An outdoor space and its planting at dusk.",
+      "video": null,
+      "passes": false,
+      "exterior": [
+        "full",
+        "half",
+        "half"
+      ],
+      "interior": []
+    },
+    {
+      "folder": "10-walkthrough",
+      "tier": "minor",
+      "title": "Walkthrough 10",
+      "type": "Animation",
+      "year": "2024",
+      "location": "Spain",
+      "client": "—",
+      "software": "3ds Max · D5 Render",
+      "summary": "An animated walkthrough of a building in Full HD.",
+      "video": {
+        "src": "",
+        "embed": ""
+      },
+      "passes": false,
+      "exterior": [
+        "half",
+        "half"
+      ],
+      "interior": []
+    }
+  ],
+  "_story_template": "OPTIONAL, per project. Add to any project to show a 'Case study' block and/or a client quote: \"story\": {\"challenge\": \"...\", \"solution\": \"...\", \"result\": \"...\"}, \"quote\": {\"text\": \"...\", \"name\": \"...\", \"role\": \"...\"}. Spanish versions go in projects.es.json under the same folder name."
+}
