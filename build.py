@@ -634,10 +634,27 @@ def gallery_group(p, group, title, base, start_no):
     return out, no
 
 
+YT_PARAMS = "autoplay=1&mute=1&controls=0&loop=1&playlist={id}&modestbranding=1&rel=0&playsinline=1&iv_load_policy=3&disablekb=1&fs=0"
+
+
 def video_block(p, base):
     v = p.get("video")
     if v is None:
         return ""
+    if v.get("ambient"):
+        # Silent, looping, no controls: plays by itself when it comes into view (YouTube id or an mp4 next to the images)
+        yid, src = v.get("youtube", ""), v.get("src", "")
+        data = (f' data-yt="https://www.youtube-nocookie.com/embed/{yid}?{YT_PARAMS.format(id=yid)}"' if yid else "") + \
+               (f' data-mp4="{ab(base)}assets/projects/{p["folder"]}/{src}"' if src else "")
+        link = f'<a class="ulink vlink" href="https://youtu.be/{yid}" target="_blank" rel="noopener">{t("Watch with sound on YouTube")} ↗</a>' if yid else ""
+        return f"""<section class="vid" id="video">
+  <div class="wrap">
+    <div class="gal-head rv"><span class="mono label">({t("Animation")})</span>{link}</div>
+    <div class="vframe vamb rv"{data}>
+      <img src="{img(p, 'video-poster.jpg', base)}"{rs(p, 'video-poster.jpg', '100vw', base)} alt="{e(p['title'])} — {t("video poster")}" width="1920" height="1080" loading="lazy">
+    </div>
+  </div>
+</section>"""
     src, emb = v.get("src", ""), v.get("embed", "")
     empty = "" if (src or emb) else " data-empty"
     src_attr = f' data-src="{ab(base)}assets/projects/{p["folder"]}/{src}"' if src else ""

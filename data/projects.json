@@ -143,6 +143,44 @@
         "exterior-03.jpg",
         "interior-02.jpg"
       ]
+    },
+    {
+      "folder": "amura",
+      "tier": "major",
+      "title": "Amura",
+      "type": "Residential",
+      "year": "",
+      "location": "Santander, Cantabria",
+      "client": "Produque",
+      "software": "3ds Max · D5 Render · Photoshop",
+      "summary": "A residential building in Santander, from the street to its rooftop terrace with sea views.",
+      "description": "Amura is a residential building in Santander, shown in exterior views, from street level to the rooftop terrace, and in an animation.",
+      "brief": "A set of exterior images and a video to present Amura, a new residential building in Santander: the building in its street, the entrance and garden, and the terrace at the top.",
+      "approach": "Warm late-afternoon light rakes across the pale panels and the dark ribbed cladding, so the angled balconies cast long, clean shadows. The views move from the whole volume to details at street level — entrance, garden, terrace — and end on the rooftop, where the sea opens up. The video carries the same light into motion.",
+      "card": {
+        "w": 2400,
+        "h": 1350,
+        "ratio": "16:9"
+      },
+      "exterior": [
+        "full",
+        "wide",
+        "tall",
+        "half",
+        "half",
+        "wide",
+        "tall"
+      ],
+      "interior": [],
+      "passes": false,
+      "video": {
+        "youtube": "3oNrX-RtS6s",
+        "ambient": true
+      },
+      "spread": [
+        "exterior-01.jpg",
+        "exterior-03.jpg"
+      ]
     }
   ],
   "_story_template": "OPTIONAL, per project. Add to any project to show a 'Case study' block and/or a client quote: \"story\": {\"challenge\": \"...\", \"solution\": \"...\", \"result\": \"...\"}, \"quote\": {\"text\": \"...\", \"name\": \"...\", \"role\": \"...\"}. Spanish versions go in projects.es.json under the same folder name.",

@@ -185,8 +185,9 @@ var DM_ES = document.documentElement.lang === "es";
   }
 
   /* Video: load real source on click (mp4 or embed) */
-  document.querySelectorAll(".vframe").forEach(function (v) {
+  document.querySelectorAll(".vframe:not(.vamb)").forEach(function (v) {
     var btn = v.querySelector(".play");
+    if (!btn) return;
     btn.addEventListener("click", function () {
       var src = v.dataset.src, emb = v.dataset.embed, el;
       if (src) {
@@ -657,5 +658,37 @@ var DM_ES = document.documentElement.lang === "es";
       })(t0);
     }, { threshold: .6 });
     io.observe(el);
+  });
+})();
+
+
+/* ===== Ambient video: silent, looping, no controls; starts when it comes into view ===== */
+(function () {
+  "use strict";
+  var boxes = [].slice.call(document.querySelectorAll(".vamb"));
+  if (!boxes.length || !("IntersectionObserver" in window)) return;
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  boxes.forEach(function (box) {
+    var io = new IntersectionObserver(function (es) {
+      if (!es[0].isIntersecting) return;
+      io.disconnect();
+      if (reduce) return; /* keep the still frame */
+      var el;
+      if (box.dataset.mp4) {
+        el = document.createElement("video");
+        el.src = box.dataset.mp4; el.muted = true; el.loop = true; el.autoplay = true; el.playsInline = true;
+        el.setAttribute("muted", ""); el.setAttribute("playsinline", "");
+        el.addEventListener("playing", function () { box.classList.add("on"); });
+      } else if (box.dataset.yt) {
+        el = document.createElement("iframe");
+        el.src = box.dataset.yt; el.title = "Video"; el.tabIndex = -1;
+        el.allow = "autoplay; encrypted-media; picture-in-picture";
+        el.setAttribute("loading", "lazy");
+        el.addEventListener("load", function () { setTimeout(function () { box.classList.add("on"); }, 1200); });
+      } else { return; }
+      el.className = "vamb-media";
+      box.appendChild(el);
+    }, { threshold: .35 });
+    io.observe(box);
   });
 })();
