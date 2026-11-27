@@ -1013,7 +1013,8 @@ def services_page():
         inc = "".join(f"<li>{e(x)}</li>" for x in sv["includes"][:4])
         rows.append(f"""    <a class="svrow rv{' flip' if n % 2 else ''}" href="{pg('services/' + sv['slug'] + '.html')}">
       <span class="frame"><img src="{img(pr, pic)}"{rs(pr, pic, '(max-width:900px) 100vw, 50vw')} alt="" width="1800" height="1200" loading="lazy"></span>
-      <span class="sv-body"><span class="sv-t">{e(sv['short'])}</span><span class="sv-lead">{e(sv['lead'])}</span><ul class="mono">{inc}</ul><span class="mono sv-go">{t("Learn more")} <span class="ar">→</span></span></span>
+      <span class="sv-body"><span class="sv-top"><span class="sv-t">{e(sv['short'])}</span><span class="sv-lead">{e(sv['lead'])}</span></span>
+        <span class="sv-bot"><ul class="mono">{inc}</ul><span class="mono sv-go">{t("Learn more")} <span class="ar">→</span></span></span></span>
     </a>""")
     local = SVCS[4] if len(SVCS) > 4 else None
     loc_line = f"""<section class="teaser"><div class="wrap tz rv"><span class="mono label">(Santander)</span><div class="tz-body"><p class="tz-lead">{e(local['lead'])}</p><a class="mono ulink" href="{pg('services/' + local['slug'] + '.html')}">{e(local['short'])} →</a></div></div></section>""" if local else ""

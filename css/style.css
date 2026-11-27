@@ -843,3 +843,17 @@ html,body,button,input,select,textarea{font-family:var(--display)}
 .sv-body ul{gap:4px}
 .p-top+section{padding-top:0}
 main>section.teaser{padding:clamp(56px,6vw,96px) 0}
+
+/* Services page: the text runs parallel to its image (top with top, bottom with bottom) and aligns to the outer edge it sits on */
+.svrow{align-items:stretch}
+.sv-body{justify-content:space-between;gap:28px;padding:4px 0}
+.sv-top,.sv-bot{display:flex;flex-direction:column;gap:14px}
+.svrow:not(.flip) .sv-body{grid-column:8/13;text-align:right;align-items:flex-end}
+.svrow:not(.flip) :is(.sv-top,.sv-bot){align-items:flex-end}
+.svrow:not(.flip) .sv-lead{margin-left:auto}
+.svrow.flip .sv-body{grid-column:1/6;text-align:left;align-items:flex-start}
+@media (max-width:900px){
+  .svrow:not(.flip) .sv-body,.svrow.flip .sv-body{grid-column:1/-1;text-align:left;align-items:flex-start}
+  .svrow:not(.flip) :is(.sv-top,.sv-bot){align-items:flex-start}
+  .sv-body{gap:18px}
+}
