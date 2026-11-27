@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Builds the static site from data/projects.json.
 Usage: python3 build.py   ->   index.html, projects.html, projects/<slug>.html"""
+import re
 import base64, copy, html, json, posixpath
 from pathlib import Path
 
@@ -14,7 +15,7 @@ SITE, SVCS = SITE_EN, SITE_EN["services"]
 LANG = "en"
 MISSING = set()
 SVC_ES_SLUG = {x["slug"]: x["slug_es"] for x in SITE_ES["services"]}
-ES_PAGES = {"projects.html": "proyectos.html", "pricing.html": "precios.html", "studio.html": "estudio.html"}
+ES_PAGES = {"projects.html": "proyectos.html", "pricing.html": "precios.html", "about.html": "sobre-mi.html", "services.html": "servicios.html", "contact.html": "contacto.html"}
 KINDS, DATA = CFG["kinds"], CFG["projects"]
 DATA_EN = DATA
 for _p in DATA:  # page URL = asset folder name, so both always match
@@ -38,6 +39,12 @@ def set_lang(lang):
     MAJOR = [p for p in DATA if p["tier"] == "major"]
     MINOR = [p for p in DATA if p["tier"] == "minor"]
     idx = {p["slug"]: n + 1 for n, p in enumerate(DATA)}
+    global SHOW_TYPE
+    SHOW_TYPE = len({p["type"] for p in DATA}) > 1
+
+
+SHOW_TYPE = False
+typ = lambda p, sep=" · ": (e(t(p["type"])) + sep) if SHOW_TYPE else ""
 
 
 def t(s):
@@ -93,8 +100,13 @@ ANALYTICS = ""
 ANALYTICS_ID = ""
 # Micro-animations on/off (False = static site, no motion at all)
 ANIMATIONS = True
-# Logo: swap for <img src="{base}assets/brand/logo.svg" alt="dsgn·dm archviz" height="22"> when ready.
-LOGO = 'dsgn·dm <span>archviz</span>'
+# Logo: assets/brand/logo.svg (stacked wordmark). {root} is replaced with the path to the site root.
+LOGO = ('<img class="logo-img logo-l" src="{root}assets/brand/logo.svg" alt="dsgn·dm archviz" width="120" height="32">'
+        '<img class="logo-img logo-d" src="{root}assets/brand/logo-dark.svg" alt="dsgn·dm archviz" width="120" height="32">'
+        '<img class="logo-img logo-w" src="{root}assets/brand/logo-white.svg" alt="" width="120" height="32">')
+logo = lambda base="": LOGO.replace("{root}", ab(base))
+# Studio portrait: transparent line drawing (PNG/WebP). Turned into particles on the page.
+PORTRAIT = "portrait.png"
 
 e = html.escape
 b64 = lambda s: base64.b64encode(s.encode()).decode()
@@ -141,6 +153,8 @@ FAVICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox=
 
 
 # ---------------------------------------------------------------- shared
+THEME = ("<script>(function(d){try{var m=localStorage.getItem('dm-theme')}catch(e){}"
+         "var t=m||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');d.setAttribute('data-theme',t)})(document.documentElement)</script>")
 GATE = ("<script>(function(d){d.classList.add('js');"
         "if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;"
         "d.classList.add('anim');"
@@ -194,10 +208,15 @@ def head(title, desc, base="", path=None, ld=None, og="assets/og.jpg"):
 <meta property="og:description" content="{e(desc)}">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="{'es_ES' if LANG == 'es' else 'en_GB'}">
-<meta name="theme-color" content="#F1F3F7">
+<meta name="theme-color" content="#F1F3F7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+{THEME}
 {seo}
-<link rel="icon" href="{FAVICON}">
+<link rel="icon" href="{ab(base)}assets/brand/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="{ab(base)}assets/brand/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="{ab(base)}assets/brand/apple-touch-icon.png">
 {gate}
+<link rel="preload" href="{ab(base)}assets/fonts/archivo-wdth.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{ab(base)}css/style.css">
 {analytics_tag()}
 </head>
@@ -231,39 +250,43 @@ def lang_links(cur):
     return desk, mob
 
 
+def NAV(base=""):
+    """Main pages, same order in header, mobile menu and footer."""
+    return [(t("Projects"), f"{base}{pg('projects.html')}"), (t("Services"), f"{base}{pg('services.html')}"), (t("About"), f"{base}{pg('about.html')}"),
+            (t("Process &amp; pricing"), f"{base}{pg('pricing.html')}"), (t("Contact"), f"{base}{pg('contact.html')}")]
+
+
 def header(base="", home=None, cur=None):
     if home is None:
         home = f"{base}index.html" if base else ""
-    links = [(t("Projects"), f"{base}{pg('projects.html')}"), (t("Studio"), f"{base}{pg('studio.html')}"), (t("Services"), f"{home}#services"),
-             (t("Pricing"), f"{base}{pg('pricing.html')}"), (t("FAQ"), f"{home}#faq"), (t("Contact"), f"{home}#contact")]
+    links = NAV(base)
     nav = "".join(f'<a href="{h}">{x}</a>' for x, h in links)
     desk, mob = lang_links(cur)
     return f"""<body id="page">
 <a class="skip" href="#main">{t("Skip to content")}</a>
 <header class="site-header">
-  <a class="logo" href="{home or '#top'}" aria-label="{SITE_NAME} — {t('home')}">{LOGO}</a>
+  <a class="logo" href="{home or '#top'}" aria-label="{SITE_NAME} — {t('home')}">{logo(base)}</a>
   <nav class="nav-desktop" aria-label="Main">{nav}</nav>
-  <div class="head-right">{desk}<a class="btn head-cta" href="{home}#contact">{t("Let’s talk")}</a></div>
+  <div class="head-right">{desk}<button class="theme-sw" type="button" role="switch" aria-checked="false" aria-label="{t('Dark mode')}"><span class="knob"></span></button><a class="btn head-cta" href="{base}{pg('contact.html')}">{t("Let’s talk")}</a></div>
   <button class="menu-btn" type="button" aria-label="{t('Open menu')}">{t("Menu")}</button>
 </header>
-<div class="mobile-menu" aria-label="Menu">{nav}{mob}</div>
+<div class="mobile-menu" aria-label="Menu">{nav}{mob}<div class="theme-row"><button class="theme-sw" type="button" role="switch" aria-checked="false" aria-label="{t('Dark mode')}"><span class="knob"></span></button><span>{t("Dark mode")}</span></div></div>
 """
 
 
 def footer(base=""):
-    svc = "".join(f'<a href="{base}{pg("services/" + x["slug"] + ".html")}">{e(x["short"])}</a>' for x in SVCS)
+    nav = NAV(base)
+    links = "".join(f'<a href="{h}">{x}</a>' for x, h in nav)
     return f"""<footer class="site-footer">
   <div class="wrap">
-    <div class="foot-grid">
-      <div class="foot-brand"><a class="logo" href="{base}index.html">{LOGO}</a><p>{t("Architectural visualization for architects, developers and interior designers.")}</p></div>
-      <nav class="foot-col" aria-label="Footer"><span class="mono muted">{t("Navigate")}</span><a href="{base}{pg('projects.html')}">{t("Projects")}</a><a href="{base}{pg('studio.html')}">{t("Studio")}</a><a href="{base}{pg('pricing.html')}">{t("Process &amp; pricing")}</a><a href="{base}index.html#faq">{t("FAQ")}</a><a href="{base}index.html#contact">{t("Contact")}</a></nav>
-      <nav class="foot-col" aria-label="Services"><span class="mono muted">{t("Services")}</span>{svc}</nav>
-      <div class="foot-col"><span class="mono muted">{t("Elsewhere")}</span><a href="{BEHANCE}" target="_blank" rel="noopener">Behance ↗</a><a href="{MAIN_SITE}" target="_blank" rel="noopener">{t("dsgn·dm — UX/UI &amp; branding ↗")}</a></div>
+    <div class="foot-row">
+      <a class="logo" href="{base}index.html">{logo(base)}</a>
+      <nav class="foot-nav mono" aria-label="Footer">{links}</nav>
     </div>
-    <div class="foot-bottom mono"><span>© 2026 {SITE_NAME}</span><span>Santander, {t("Spain")}</span><a href="#page">{t("Back to top ↑")}</a></div>
+    <div class="foot-bottom mono"><span>© 2026 {SITE_NAME} · Santander</span><span class="foot-ext"><a href="{BEHANCE}" target="_blank" rel="noopener">Behance ↗</a><a href="{MAIN_SITE}" target="_blank" rel="noopener">dsgn·dm ↗</a></span><a href="#page">{t("Back to top ↑")}</a></div>
   </div>
 </footer>
-<a class="sticky-cta" href="{base}index.html#contact" aria-label="{t("Let’s talk")}">{t("Let’s talk")}</a>
+<a class="sticky-cta" href="{base}{pg('contact.html')}" aria-label="{t("Let’s talk")}">{t("Let’s talk")}</a>
 <script src="{ab(base)}js/main.js" defer></script>
 </body>
 </html>
@@ -276,46 +299,62 @@ def marks():
 
 # ---------------------------------------------------------------- home
 def hero():
+    """Full-width image hero: the featured projects crossfade behind the headline; the index below drives them."""
     def slide(p, n):
         if p.get("loop"):
             return (f'<video class="hx-img{" on" if n == 0 else ""}" data-loop src="{ab("")}assets/projects/{p["folder"]}/{p["loop"]}" poster="{img(p, "hero.jpg")}" '
                     f'muted loop playsinline preload="metadata" aria-label="{e(p["title"])}" width="2400" height="1350"></video>')
         return None
     imgs = "".join(
-        slide(p, n) or f'<img class="hx-img{" on" if n == 0 else ""}" src="{img(p, "hero.jpg")}"{rs(p, "hero.jpg", "(max-width:900px) 100vw, 75vw")} alt="{e(p["title"])}" width="2400" height="1350"'
-        f'{"" if n == 0 else " loading=lazy"}>' for n, p in enumerate(MAJOR))
+        slide(p, n) or f'<img class="hx-img{" on" if n == 0 else ""}" src="{img(p, "hero.jpg")}"{rs(p, "hero.jpg", "(max-width:900px) and (orientation:portrait) 170vh, 100vw")} alt="{e(p["title"])}" width="2400" height="1350"'
+        f'{' fetchpriority="high"' if n == 0 else " loading=lazy"}>' for n, p in enumerate(MAJOR))
     items = "".join(
-        f'<button class="hx-item" type="button" data-title="{e(p["title"])}" data-dims="2400 × 1350 px" data-href="{href(p)}">'
-        f'<span class="mono n">{num(n + 1)}</span><span class="t">{e(p["title"])}</span><span class="mono">{e(p["year"])}</span></button>'
+        f'<button class="hx-item" type="button" data-title="{e(p["title"])}" data-dims="{e(p["location"])}" data-href="{href(p)}" aria-label="{e(p["title"])}"></button>'
         for n, p in enumerate(MAJOR))
-    return f"""<section class="hero" id="top">
-  <div class="wrap">
-    <h1 class="display rv">{t("Architecture, seen <em>before</em> it’s built.")}</h1>
-    <div class="hero-grid">
-      <div class="hx-stage rv">
-        <div class="hx-frame">
-          {marks()}
-          {imgs}
-        </div>
-        <div class="hx-cap mono"><span><span class="hx-n blue">Fig. 01</span> &nbsp; <span class="hx-t"></span></span><span><span class="hx-d"></span> &nbsp; <a class="hx-l ulink" href="#">{t("View project →")}</a></span></div>
+    return f"""<section class="hero hero-bleed" id="top">
+  <h1 class="sr-only">{t("Architecture, seen <em>before</em> it’s built.").replace("<em>", "").replace("</em>", "")}</h1>
+  <div class="hx-stage">
+      <div class="hx-frame on-img">
+        {imgs}
+        <div class="hx-shade" aria-hidden="true"></div>
+        <a class="hx-cap hx-l" href="#"><span class="hx-t"></span><span class="mono hx-d"></span><span class="hx-n" hidden></span></a>
+        <div class="hx-list" style="--n:{len(MAJOR)}">{items}</div>
       </div>
-      <aside class="hx-side rv">
-        <p class="hx-intro">{t("Visualization studio of Diego Moreno. Stills, animation and sales material for architects, developers and interior designers.")}</p>
-        <div>
-          <span class="mono muted" style="display:block;margin-bottom:6px">{t("Selected")} — 04</span>
-          <div class="hx-list">{items}</div>
-        </div>
-      </aside>
-    </div>
   </div>
 </section>"""
 
+
+def spread(p, n):
+    """Featured project card on the home: one frame whose images change with a soft horizontal wipe."""
+    names = [x for x in ["hero.jpg", "exterior-01.jpg", "interior-01.jpg", "exterior-02.jpg", "interior-02.jpg"]
+             if (ROOT / "assets" / "projects" / p["folder"] / x).exists()][:4]
+    imgs = "".join(f'<img class="fc-img{" on" if k == 0 else ""}" src="{img(p, x)}"{rs(p, x, "(max-width:700px) 100vw, " + ("100vw" if n == 0 else "50vw"))} alt="{e(p["title"]) if k == 0 else ""}" width="1800" height="1200" loading="lazy">' for k, x in enumerate(names))
+    dots = "".join(f'<i{" class=on" if k == 0 else ""}></i>' for k in range(len(names)))
+    return f"""    <a class="fcard rv" href="{href(p)}" style="--d:{n}">
+      <span class="fc-frame">{imgs}<span class="fc-dots" aria-hidden="true">{dots}</span></span>
+      <span class="fc-cap"><span class="fc-t">{e(p['title'])}</span><span class="mono fc-m">{e(p['location'])}</span><span class="fc-go" aria-hidden="true">→</span></span>
+    </a>"""
+
+
+def pcard(p, base="", sizes="(max-width:700px) 100vw, (max-width:1100px) 50vw, 33vw", heading="h3"):
+    """Project card used in every project grid: image, name, location and image count. No numbers."""
+    count = len(p["exterior"]) + len(p["interior"])
+    return f"""      <a class="pcard" href="{href(p, base)}" data-n="{idx[p['slug']]}" data-title="{e(p['title'])}" data-loc="{e(p['location'])}" data-type="{e(t(p['type']))}">
+        <span class="frame"><img src="{img(p, 'index.jpg', base)}"{rs(p, 'index.jpg', sizes, base)} alt="{e(p['title'])}" width="1200" height="800" loading="lazy"></span>
+        <span class="pc-cap"><{heading} class="pc-t">{e(p['title'])}</{heading}><span class="ar" aria-hidden="true">→</span>
+          <span class="mono pc-m">{typ(p)}{e(p['location'])}</span></span>
+      </a>"""
+
+
+def sorter():
+    sort = "".join(f'<button class="ix-sort{" on" if k == "n" else ""}" type="button" data-sort="{k}" aria-pressed="{"true" if k == "n" else "false"}">{lbl}</button>' for k, lbl in (("n", t("Selection")), ("title", "A–Z"), ("loc", t("Location"))))
+    return f'<div class="ix-sorts mono" role="group" aria-label="{t("Sort projects")}">{sort}</div>'
 
 def work_card(p, n):
     c = p["card"]
     return f"""      <a class="work w{n + 1} rv" href="{href(p)}">
         <div class="frame"><img src="{img(p, 'card.jpg')}"{rs(p, 'card.jpg', '(max-width:900px) 100vw, 50vw')} alt="{e(p['title'])}" width="{c['w']}" height="{c['h']}" loading="lazy"></div>
-        <div class="cap"><span class="mono n">{num(n + 1)}</span><h3>{e(p['title'])}</h3><span class="mono tag">{e(t(p['type']))} · {e(p['year'])}</span><p>{e(p['summary'])}</p></div>
+        <div class="cap"><span class="mono n">{num(n + 1)}</span><h3>{e(p['title'])}</h3><span class="mono tag">{e(t(p['type']))} · {e(p['location'])}</span><p>{e(p['summary'])}</p></div>
       </a>"""
 
 
@@ -325,57 +364,24 @@ def row(p):
         <div class="row-thumb"><img src="{img(p, 'thumb.jpg')}" alt="" width="480" height="320" loading="lazy"></div>
         <h3>{e(p['title'])}</h3>
         <span class="mono type">{e(t(p['type']))}</span>
-        <span class="mono loc">{e(t(p['location']))}</span>
-        <span class="mono yr">{e(p['year'])}</span>
+        <span class="mono loc">{e(p['location'])}</span>
         <span class="ar">↗</span>
       </a>"""
 
 
-def index_page():
-    works = "\n".join(work_card(p, n) for n, p in enumerate(MAJOR))
-    rows = "\n".join(row(p) for p in MINOR)
-    svc = "\n".join(f'      <a class="svc rv" href="{pg("services/" + SVCS[n]["slug"] + ".html")}"><span class="mono n">{num(n + 1)}</span><h3>{t(h)}</h3><p>{t(d)}</p><span class="mono more">{t("Learn more →")}</span></a>' for n, (h, d) in enumerate(SERVICES))
-    steps = "\n".join(f'      <div class="step rv"><span class="mono n">{num(n + 1)}</span><h3>{t(h)}</h3><p>{t(d)}</p></div>' for n, (h, d) in enumerate(STEPS))
-    faqs = "\n".join(f'        <details><summary><span class="mono n">{num(n + 1)}</span>{t(q)}</summary><p>{t(a)}</p></details>' for n, (q, a) in enumerate(FAQS))
-    return head(t("dsgn·dm archviz — Architectural visualization"),
-                t("Architectural visualization studio in Santander, Spain. Stills, animation and sales material for architects, developers and interior designers."),
-                path="index.html", ld=[org_ld(), faq_ld()]) + header(cur="index.html") + f"""
-<main id="main">
-{hero()}
+def portrait(base=""):
+    """Studio portrait: line drawing rebuilt with WebGL particles (js/main.js, .pp). The drawing itself is the fallback."""
+    src = f"{ab(base)}assets/brand/{PORTRAIT}"
+    return f"""<div class="frame pp" data-src="{src}">{marks()}
+        <img class="pp-still" src="{src}" alt="{t("Portrait of Diego Moreno, line drawing")}" width="1230" height="1279" loading="lazy">
+        <canvas aria-hidden="true"></canvas></div>"""
 
-<section id="studio">
-  <div class="wrap studio">
-    <figure class="studio-fig rv">
-      <div class="frame">{marks()}
-        <img src="{ab("")}assets/brand/studio.jpg" alt="{t("Studio portrait")}" width="1200" height="1500" loading="lazy"></div>
-      <figcaption class="mono">Fig. — Studio · 1200 × 1500 px</figcaption>
-    </figure>
-    <div class="studio-copy rv">
-      <div><span class="mono label">({t("Studio")})</span>
-      <p class="studio-lead">{t("Drawings become images that are <em>understood, felt</em> and approved.")}</p></div>
-      <p>{t("dsgn·dm archviz is the visualization studio of Diego Moreno, working independently from {link}Santander</a>. Over 16 years creating stills, animation and sales material for architects, developers and interior designers.").replace("{link}", '<a class="ulink" href="' + pg("services/3d-visualization-santander.html") + '">')}</p>
-      <p>{t("Direct contact from the first reference to the final delivery, with obsessive care for light, material and the detail that makes a project believable.")}</p>
-      <a class="mono ulink" style="align-self:flex-start" href="{pg("studio.html")}">{t("More about the studio →")}</a>
-      <dl class="spec mono">
-        <dt>{t("Tools")}</dt><dd>3ds Max · Corona · D5 Render</dd>
-        <dt>{t("Disciplines")}</dt><dd>{t("Exteriors")} · {t("Interiors")} · {t("Animation")} · {t("Sales material")}</dd>
-        <dt>{t("Base")}</dt><dd>Santander, {t("Spain")}</dd>
-      </dl>
-    </div>
-  </div>
-</section>
 
-<section id="work" style="padding-top:0">
-  <div class="wrap">
-    <div class="sec-head rv"><div><span class="mono label">({t("Work")})</span><h2 class="display">{t("Selected<br>work")}</h2></div>
-      <div class="meta-col"><span class="mono meta">{t("04 featured<br>06 in the archive")}</span><a class="mono ulink" href="{pg("projects.html")}">{t("All projects →")}</a></div></div>
-    <div class="works">
-{works}
-    </div>
-  </div>
-</section>
-
-<section id="archive" style="padding-top:0">
+def archive_section(rows):
+    """Minor projects list. Omitted entirely while there are none."""
+    if not MINOR:
+        return ""
+    return f"""<section id="archive" style="padding-top:0">
   <div class="wrap">
     <div class="sec-head rv"><div><span class="mono label">({t("Archive")})</span><h2 class="display">{t("More<br>projects")}</h2></div>
       <a class="mono ulink" href="{pg("projects.html")}">{t("All projects →")}</a></div>
@@ -384,40 +390,136 @@ def index_page():
     </div>
   </div>
 </section>
-<div class="preview" aria-hidden="true"><img alt="" src="" width="480" height="320"></div>
+<div class="preview" aria-hidden="true"><img alt="" src="" width="480" height="320"></div>"""
 
-<section id="services">
+
+def teaser(label, text, link, link_label, items=""):
+    """One quiet line on the home that points to a full page."""
+    return f"""<section class="teaser">
+  <div class="wrap tz rv">
+    <span class="mono label">({label})</span>
+    <div class="tz-body"><p class="tz-lead">{text}</p>{items}<a class="mono ulink" href="{link}">{link_label}</a></div>
+  </div>
+</section>"""
+
+
+# Home: before/after comparison. "placeholder": True while the clay pass is a stand-in generated from the final render.
+HOME_COMPARE = {"project": "quinta-atlantica", "clay": "pass-clay.jpg", "final": "hero.jpg", "placeholder": True}
+# Home: a full-width image pause between blocks (project folder, image)
+HOME_PAUSE = ("novalinas", "exterior-03.jpg")
+
+
+def statement():
+    return f"""<section class="statement">
+  <div class="wrap"><p class="st-line rv">{t("Architectural visualization from Santander — light, material and calm.")}</p></div>
+</section>"""
+
+
+def compare_block():
+    c = HOME_COMPARE
+    p = next((x for x in DATA if x["folder"] == c["project"]), None)
+    if not p or not (ROOT / "assets" / "projects" / p["folder"] / c["clay"]).exists():
+        return ""
+    note = f'<span class="mono phold ba-note">[ {t("clay pass pending")} ]</span>' if c.get("placeholder") else ""
+    return f"""<section class="compare">
   <div class="wrap">
-    <div class="sec-head rv"><div><span class="mono label">({t("Services")})</span><h2 class="display">{t("What<br>I do")}</h2></div>
-      <div class="meta-col"><p style="max-width:34ch;text-align:right">{t("From a single image to a complete communication kit for a development.")}</p><a class="mono ulink" href="{pg("pricing.html")}">{t("Process &amp; pricing →")}</a></div></div>
-    <div class="services">
-{svc}
+    <div class="sec-head rv"><div><span class="mono label">({t("Process")})</span><h2 class="display">{t("From model to image")}</h2></div>{note}</div>
+    <div class="ba rv" style="--x:50%">
+      <img class="ba-final" src="{img(p, c['final'])}"{rs(p, c['final'], '100vw')} alt="{e(p['title'])} — {t('final render')}" width="2400" height="1350" loading="lazy">
+      <img class="ba-clay" src="{img(p, c['clay'])}"{rs(p, c['clay'], '100vw')} alt="{e(p['title'])} — {t('clay model')}" width="2400" height="1350" loading="lazy">
+      <span class="ba-line" aria-hidden="true"><span class="ba-knob">↔</span></span>
+      <span class="mono ba-l">{t("Clay")}</span><span class="mono ba-r">{t("Final")}</span>
+      <input class="ba-range" type="range" min="0" max="100" value="50" aria-label="{t("Compare clay model and final render")}">
     </div>
   </div>
-</section>
+</section>"""
 
-{trust_section()}
 
-<section id="workflow" class="workflow">
+def figures():
+    figs = "".join(f'<div class="nf"><strong>{ph(x["value"])}</strong><span class="mono">{e(x["label"])}</span></div>' for x in SITE["stats"][:3])
+    return f"""<section class="numbers"><div class="wrap nfs rv">{figs}</div></section>"""
+
+
+def pause():
+    folder, name = HOME_PAUSE
+    p = next((x for x in DATA if x["folder"] == folder), None)
+    if not p or not (ROOT / "assets" / "projects" / folder / name).exists():
+        return ""
+    return f"""<a class="pause" href="{href(p)}" aria-label="{e(p['title'])}"><img src="{img(p, name)}"{rs(p, name, '100vw')} alt="{e(p['title'])}" width="2400" height="1350" loading="lazy"><span class="mono pause-cap">{e(p['title'])} · {e(p['location'])}</span></a>"""
+
+
+def service_pic(n, sv):
+    """Image used for a service: a render from the work that fits it."""
+    pr = MAJOR[n % len(MAJOR)] if n < 3 else MAJOR[1 % len(MAJOR)]
+    pic = "interior-03.jpg" if "interior" in sv["slug"] else ("exterior-03.jpg" if "animation" in sv["slug"] else ("hero.jpg" if n >= 3 else "exterior-01.jpg"))
+    if not (ROOT / "assets" / "projects" / pr["folder"] / pic).exists():
+        pic = "hero.jpg"
+    return pr, pic
+
+
+def services_strip():
+    """Home: services as a typographic list; the image beside it changes to match the service you point at."""
+    rows, pics = [], []
+    for n, sv in enumerate(SVCS[:4]):
+        pr, pic = service_pic(n, sv)
+        pics.append(f'<img class="sl-img{" on" if n == 0 else ""}" data-i="{n}" src="{img(pr, pic)}"{rs(pr, pic, "(max-width:900px) 100vw, 40vw")} alt="" width="1200" height="1500" loading="lazy">')
+        rows.append(f"""      <a class="sl-row{' on' if n == 0 else ''}" data-i="{n}" href="{pg('services/' + sv['slug'] + '.html')}">
+        <span class="sl-t">{e(sv['short'])}</span>
+        <span class="sl-d"><span>{e(sv['lead'])}</span></span>
+      </a>""")
+    return f"""<section class="svc-list">
   <div class="wrap">
-    <div class="sec-head rv"><div><span class="mono label">({t("Workflow")})</span><h2 class="display">{t("How I<br>work")}</h2></div>
-      <p style="max-width:34ch;text-align:right">{t("A clear path, so you always know what is happening and which decisions are next.")}</p></div>
-    <div class="timeline">
-{steps}
+    <div class="sl-top rv"><span class="mono label">({t("Services")})</span><a class="mono ulink" href="{pg('services.html')}">{t("All services →")}</a></div>
+    <div class="sl-grid rv">
+      <div class="sl-rows">
+{chr(10).join(rows)}
+      </div>
+      <div class="sl-side" aria-hidden="true"><div class="sl-pic">{''.join(pics)}</div>
+        <div class="sl-caps">{''.join(f'<p class="sl-cap{" on" if n == 0 else ""}">{e(sv["lead"])}</p>' for n, sv in enumerate(SVCS[:4]))}</div></div>
     </div>
+  </div>
+</section>"""
+
+
+def pricing_hook():
+    return f"""<section class="price-hook">
+  <div class="wrap ph-row rv">
+    <div><span class="mono label">({t("Process &amp; pricing")})</span>
+      <p class="ph-lead">{t("A closed price and a week-by-week schedule, before we start.")}</p></div>
+    <a class="btn" href="{pg('pricing.html')}">{t("See how it works")} <span class="ar">→</span></a>
+  </div>
+</section>"""
+
+
+def index_page():
+    works = "\n".join(spread(p, n) for n, p in enumerate(MAJOR[:4]))
+    svc_items = '<p class="tz-list mono">' + "".join(f'<a href="{pg("services/" + x["slug"] + ".html")}">{e(x["short"])}</a>' for x in SVCS[:4]) + "</p>"
+    return head(t("dsgn·dm archviz — Architectural visualization"),
+                t("Architectural visualization studio in Santander, Spain. Stills, animation and sales material for architects, developers and interior designers."),
+                path="index.html", ld=[org_ld()]) + header(cur="index.html") + f"""
+<main id="main">
+{hero()}
+
+{statement()}
+
+<section id="work">
+  <div class="wrap">
+    <div class="sec-head rv"><div><span class="mono label">({t("Work")})</span><h2 class="display">{t("Selected<br>work")}</h2></div></div>
+    <div class="fgrid fgrid-{min(len(MAJOR), 4)}">
+{works}
+    </div>
+    <a class="all-link rv" href="{pg("projects.html")}"><span>{t("All projects")}</span><span class="mono">{num(len(DATA))}</span><span class="ar" aria-hidden="true">→</span></a>
   </div>
 </section>
 
-<section id="faq">
-  <div class="wrap faq">
-    <div class="faq-aside rv"><span class="mono label">(FAQ)</span><h2 class="display">{t("Good<br>questions")}</h2>
-      <p>{t("The usual answers about schedules, deliveries and the way we would work together.")}</p>
-      <a class="mono ulink" href="#contact">{t("Ask me something →")}</a></div>
-    <div class="faq-list rv">
-{faqs}
-    </div>
-  </div>
-</section>
+{compare_block()}
+
+{figures()}
+
+
+{services_strip()}
+
+{pricing_hook()}
 
 {contact_section()}
 </main>
@@ -425,6 +527,16 @@ def index_page():
 
 
 def contact_section(base=""):
+    """Slim call to action at the end of every page; the full details and form live on the contact page."""
+    return f"""<section class="cta-band">
+  <div class="wrap cta-row rv">
+    <p class="display">{t("Have a project in <em>mind?</em>")}</p>
+    <a class="btn" href="{base}{pg('contact.html')}">{t("Let’s talk")} <span class="ar">→</span></a>
+  </div>
+</section>"""
+
+
+def contact_full(base=""):
     return f"""<section id="contact" class="contact">
   <div class="wrap">
     <span class="mono label">({t("Contact")})</span>
@@ -443,6 +555,15 @@ def contact_section(base=""):
 </section>"""
 
 
+def contact_page():
+    return head(t("Contact — dsgn·dm archviz"), t("Send plans, a location and a deadline. You will receive a closed proposal with a week-by-week schedule."),
+                path="contact.html", ld=[crumbs([(t("Home"), "index.html"), (t("Contact"), "contact.html")])]) + header("", home="index.html", cur="contact.html") + f"""
+<main id="main" class="contact-page">
+{contact_full().replace('<h2 class="display rv">', '<h1 class="display rv">', 1).replace('</h2>', '</h1>', 1)}
+</main>
+""" + footer("")
+
+
 # ---------------------------------------------------------------- projects index
 def projects_page():
     base = ""
@@ -452,10 +573,7 @@ def projects_page():
             types.append(p["type"])
     filters = '<button class="flt on" type="button" data-filter="all">{} <sup>{}</sup></button>'.format(t("All"), len(DATA)) + "".join(
         f'<button class="flt" type="button" data-filter="{e(t(ty))}">{e(t(ty))} <sup>{sum(1 for p in DATA if p["type"] == ty)}</sup></button>' for ty in types)
-    cards = "\n".join(f"""      <a class="icard" href="{href(p)}" data-type="{e(t(p['type']))}">
-        <div class="frame"><img src="{img(p, 'index.jpg')}"{rs(p, 'index.jpg', '(max-width:700px) 100vw, 33vw')} alt="{e(p['title'])}" width="1200" height="800" loading="lazy"></div>
-        <div class="cap"><span class="mono n">{num(idx[p['slug']])}</span><h2 class="ct">{e(p['title'])}</h2><span class="mono tag">{e(t(p['type']))} · {e(p['year'])}</span></div>
-      </a>""" for p in DATA)
+    cards = "\n".join(pcard(p, heading="h2") for p in DATA)
     return head(t("Projects — dsgn·dm archviz"), t("All architectural visualization projects by dsgn·dm archviz: residential, interiors, exteriors, commercial and animation."), path="projects.html",
                 ld=[crumbs([(t("Home"), "index.html"), (t("Projects"), "projects.html")])]) + header("", home="index.html", cur="projects.html") + f"""
 <main id="main">
@@ -463,11 +581,11 @@ def projects_page():
   <div class="wrap">
     <span class="mono label">({t("Projects")})</span>
     <h1 class="display">{t("All<br>projects")}</h1>
-    <div class="filters mono" role="group" aria-label="{t("Filter projects")}">{filters}</div>
+    {sorter() if len(DATA) > 6 else ""}
   </div>
 </section>
 <section style="padding-top:0">
-  <div class="wrap"><div class="igrid">
+  <div class="wrap"><div class="pgrid ix-body">
 {cards}
   </div></div>
 </section>
@@ -494,7 +612,7 @@ def gallery_group(p, group, title, base, start_no):
         print(f"  ! {p['slug']} {group}: row spans add up to {total} (not a multiple of 12)")
     out = f"""<section class="gal" id="{group}s">
   <div class="wrap">
-    <div class="gal-head rv"><div><span class="mono label">({t(title)})</span></div><span class="mono muted">{len(kinds):02d} {t("images")}</span></div>
+    <div class="gal-head rv"><span class="mono label">({t(title)})</span></div>
     <div class="ggrid">
 {chr(10).join(items)}
     </div>
@@ -543,7 +661,7 @@ def passes_block(p, base):
 </section>"""
 
 
-def studio_page():
+def about_page():
     principles = [
         ("Light first", "Light decides how a space feels. I tune it early, with test renders, before polishing anything else."),
         ("Honest materials", "Finishes are modelled and lit to read as they will in reality, not as an idealised version of them."),
@@ -552,16 +670,16 @@ def studio_page():
     ]
     pr = "\n".join(f'      <div class="svc rv"><span class="mono n">{num(n + 1)}</span><h3>{t(h)}</h3><p>{t(d)}</p></div>' for n, (h, d) in enumerate(principles))
     steps = "\n".join(f'      <div class="step rv"><span class="mono n">{num(n + 1)}</span><h3>{t(h)}</h3><p>{t(d)}</p></div>' for n, (h, d) in enumerate(STEPS))
-    ld = [crumbs([(t("Home"), "index.html"), (t("Studio"), "studio.html")]),
+    ld = [crumbs([(t("Home"), "index.html"), (t("About"), "about.html")]),
           {"@context": "https://schema.org", "@type": "Person", "name": "Diego Moreno", "jobTitle": t("Architectural visualization artist"),
-           "url": canon("studio.html", LANG), "sameAs": [BEHANCE, MAIN_SITE], "worksFor": {"@type": "ProfessionalService", "name": SITE_NAME},
+           "url": canon("about.html", LANG), "sameAs": [BEHANCE, MAIN_SITE], "worksFor": {"@type": "ProfessionalService", "name": SITE_NAME},
            "address": {"@type": "PostalAddress", "addressLocality": "Santander", "addressRegion": "Cantabria", "addressCountry": "ES"}}]
-    return head(t("Studio — dsgn·dm archviz"), t("Meet the studio behind dsgn·dm archviz: Diego Moreno, 16+ years of architectural visualization from Santander."),
-                path="studio.html", ld=ld) + header("", home="index.html", cur="studio.html") + f"""
+    return head(t("About — dsgn·dm archviz"), t("Meet the studio behind dsgn·dm archviz: Diego Moreno, 16+ years of architectural visualization from Santander."),
+                path="about.html", ld=ld) + header("", home="index.html", cur="about.html") + f"""
 <main id="main">
 <section class="p-top">
   <div class="wrap">
-    <span class="mono label">({t("Studio")})</span>
+    <span class="mono label">({t("About")})</span>
     <h1 class="display">{t("One person,<br>start to finish.")}</h1>
   </div>
 </section>
@@ -569,13 +687,11 @@ def studio_page():
 <section style="padding-top:0">
   <div class="wrap studio">
     <figure class="studio-fig rv">
-      <div class="frame">{marks()}
-        <img src="{ab("")}assets/brand/studio.jpg" alt="{t("Studio portrait")}" width="1200" height="1500" loading="lazy"></div>
-      <figcaption class="mono">Fig. — Studio · 1200 × 1500 px</figcaption>
+      {portrait()}
+      <figcaption class="mono">Fig. — Diego Moreno · Santander</figcaption>
     </figure>
     <div class="studio-copy rv">
-      <div><span class="mono label">({t("About")})</span>
-      <p class="studio-lead">{t("Drawings become images that are <em>understood, felt</em> and approved.")}</p></div>
+      <div><p class="studio-lead">{t("Drawings become images that are <em>understood, felt</em> and approved.")}</p></div>
       <p>{t("dsgn·dm archviz is the visualization studio of Diego Moreno, working independently from {link}Santander</a>. Over 16 years creating stills, animation and sales material for architects, developers and interior designers.").replace("{link}", '<a class="ulink" href="' + pg("services/3d-visualization-santander.html") + '">')}</p>
       <p>{t("Every project is handled by me personally, so the person you brief is the person who builds the images.")}</p>
       <dl class="spec mono">
@@ -594,16 +710,6 @@ def studio_page():
       <p style="max-width:34ch;text-align:right">{t("Four ideas that guide every image, whatever the size of the project.")}</p></div>
     <div class="services">
 {pr}
-    </div>
-  </div>
-</section>
-
-<section class="workflow">
-  <div class="wrap">
-    <div class="sec-head rv"><div><span class="mono label">({t("Workflow")})</span><h2 class="display">{t("How I<br>work")}</h2></div>
-      <a class="mono ulink" href="{pg("pricing.html")}">{t("Process &amp; pricing →")}</a></div>
-    <div class="timeline">
-{steps}
     </div>
   </div>
 </section>
@@ -633,24 +739,24 @@ def print_page():
         return [n for n in names if (ROOT / "assets" / "projects" / p["folder"] / n).exists()]
     foot = lambda k: f'<div class="foot"><span class="mut">{SITE_NAME}</span><span class="mut">{k}</span></div>'
     pages = [f"""<section class="pg cover">
-  <div class="lbl">{t("Portfolio")} · 2026</div>
+  <div class="lbl">{t("Portfolio")}</div>
   <h1>{t("Architecture, seen <em>before</em> it’s built.")}</h1>
-  <div class="tag"><a class="logo" href="#">{LOGO}</a><p>{t("Visualization studio of Diego Moreno. Stills, animation and sales material for architects, developers and interior designers.")}</p></div>
+  <div class="tag"><a class="logo" href="#">{logo("../")}</a><p>{t("Visualization studio of Diego Moreno. Stills, animation and sales material for architects, developers and interior designers.")}</p></div>
 </section>"""]
     for p in MAJOR:
         shots = existing(p, [f"exterior-{i:02d}.jpg" for i in (1, 2)] + [f"interior-{i:02d}.jpg" for i in (1, 2)])[:3]
         pages.append(f"""<section class="pg full">{pimg(p, 'hero.jpg')}
-  <div class="cap"><div><div class="mut">{num(idx[p['slug']])} · {e(t(p['type']))} · {e(p['year'])}</div><h2>{e(p['title'])}</h2></div><span class="mut">{e(t(p['location']))}</span></div>
+  <div class="cap"><div><div class="mut">{e(p['location'])}</div><h2>{e(p['title'])}</h2></div><span class="mut">{e(p['location'])}</span></div>
 </section>""")
         if p.get("brief"):
             gallery = "".join(pimg(p, n) for n in shots)
             pages.append(f"""<section class="pg ptext">
   <div class="col"><div class="lbl">({t("Brief")})</div><p>{e(p['brief'])}</p><div class="lbl">({t("Approach")})</div><p>{e(p['approach'])}</p>
-    <dl><dt>{t("Type")}</dt><dd>{e(t(p['type']))}</dd><dt>{t("Year")}</dt><dd>{e(p['year'])}</dd><dt>{t("Software")}</dt><dd>{e(p['software'])}</dd></dl></div>
+    <dl><dt>{t("Location")}</dt><dd>{e(p['location'])}</dd><dt>{t("Software")}</dt><dd>{e(p['software'])}</dd></dl></div>
   <div class="shots">{gallery}</div>{foot(e(p['title']))}
 </section>""")
-    cards = "".join(f'<div>{pimg(p, "index.jpg")}<div class="cap"><span>{e(p["title"])}</span><span class="mut">{e(t(p["type"]))} · {e(p["year"])}</span></div></div>' for p in MINOR)
-    pages.append(f"""<section class="pg alt"><div class="lbl">({t("Archive")})</div><h2 style="margin-top:20px">{t("More<br>projects").replace("<br>", " ")}</h2><div class="agrid">{cards}</div></section>""")
+    cards = "".join(f'<div>{pimg(p, "index.jpg")}<div class="cap"><span>{e(p["title"])}</span><span class="mut">{e(t(p["type"]))}</span></div></div>' for p in MINOR)
+    if MINOR: pages.append(f"""<section class="pg alt"><div class="lbl">({t("Archive")})</div><h2 style="margin-top:20px">{t("More<br>projects").replace("<br>", " ")}</h2><div class="agrid">{cards}</div></section>""")
     svc = "".join(f'<div><h3>{e(x["short"])}</h3><p>{e(x["lead"])}</p></div>' for x in SVCS[:4])
     pages.append(f"""<section class="pg"><div class="lbl">({t("Services")})</div><h2 style="margin-top:20px">{t("What<br>I do")}</h2><div class="svcs">{svc}</div>{foot(t("Services"))}</section>""")
     web = (SITE_URL.replace("https://", "").replace("http://", "").rstrip("/") + "/" + ("es" if LANG == "es" else "")).rstrip("/") if SITE_URL else MAIN_SITE.replace("https://", "")
@@ -674,7 +780,7 @@ def hero_media(p, base):
     if p.get("loop"):
         return (f'<video data-loop src="{ab(base)}assets/projects/{p["folder"]}/{p["loop"]}" poster="{img(p, "hero.jpg", base)}" '
                 f'muted loop playsinline preload="metadata" aria-label="{e(p["title"])}" width="2400" height="1350"></video>')
-    return f'<img src="{img(p, "hero.jpg", base)}"{rs(p, "hero.jpg", "100vw", base)} alt="{e(p["title"])}" width="2400" height="1350">'
+    return f'<img src="{img(p, "hero.jpg", base)}"{rs(p, "hero.jpg", "(max-width:900px) and (orientation:portrait) 170vh, 100vw", base)} alt="{e(p["title"])}" width="2400" height="1350" fetchpriority="high">'
 
 
 def story_block(p):
@@ -707,27 +813,15 @@ def project_page(p):
     if n_ext: delivered.append(f"{n_ext} " + t("exterior still" if n_ext == 1 else "exterior stills"))
     if n_int: delivered.append(f"{n_int} " + t("interior still" if n_int == 1 else "interior stills"))
     if p.get("video") is not None: delivered.append(t("1 video, Full HD"))
-    meta = [(t("Client"), p["client"]), (t("Type"), t(p["type"])), (t("Location"), t(p["location"])), (t("Year"), p["year"]),
-            (t("Scope"), " · ".join(t(x) for x in scope)), (t("Software"), p["software"])]
+    meta = ([(t("Type"), t(p["type"]))] if SHOW_TYPE else []) + [
+            (t("Scope"), " · ".join(t(x) for x in scope)), (t("Software"), p["software"]), (t("Client"), p["client"])]
     dl = "".join(f'<div><dt class="mono">{k}</dt><dd>{e(v)}</dd></div>' for k, v in meta)
 
-    if p["tier"] == "major":
-        brief = f"""<section class="brief" id="brief">
-  <div class="wrap brief-grid">
-    <div class="rv"><span class="mono label">({t("Brief")})</span></div>
-    <p class="brief-lead rv">{e(p['brief'])}</p>
-    <div class="brief-cols rv">
-      <div><span class="mono label">({t("Approach")})</span><p>{e(p['approach'])}</p></div>
-      <div><span class="mono label">({t("Delivered")})</span><ul class="mono">{''.join(f'<li>{e(d)}</li>' for d in delivered)}</ul></div>
-    </div>
-  </div>
-</section>"""
-    else:
-        brief = f"""<section class="brief brief-min">
-  <div class="wrap brief-grid">
-    <div class="rv"><span class="mono label">({t("Overview")})</span></div>
-    <p class="brief-lead rv">{e(p['summary'])}</p>
-    <div class="brief-cols rv"><div><span class="mono label">({t("Delivered")})</span><ul class="mono">{''.join(f'<li>{e(d)}</li>' for d in delivered)}</ul></div></div>
+    text = "".join(f"<p>{e(x)}</p>" for x in (p.get("brief"), p.get("approach")) if x) or f"<p>{e(p['summary'])}</p>"
+    brief = f"""<section class="p-info" id="brief">
+  <div class="wrap p-info-grid">
+    <dl class="p-meta">{dl}</dl>
+    <div class="p-text rv">{text}</div>
   </div>
 </section>"""
 
@@ -743,31 +837,26 @@ def project_page(p):
     body += [passes_block(p, base), quote_block(p)]
 
     prv = DATA[(i - 1) % len(DATA)]
-    return head(t("{title} — {type} visualization | dsgn·dm archviz").format(title=p["title"], type=t(p["type"]).lower() if LANG == "es" else t(p["type"])), p["summary"], base, path=f"projects/{p['slug']}.html", og=f"assets/projects/{p['folder']}/hero.jpg",
+    return head(t("{title} — {type} visualization | dsgn·dm archviz").format(title=p["title"], type=t(p["type"]).lower() if LANG == "es" else t(p["type"])), p.get("description") or p["summary"], base, path=f"projects/{p['slug']}.html", og=f"assets/projects/{p['folder']}/hero.jpg",
                 ld=[crumbs([(t("Home"), "index.html"), (t("Projects"), "projects.html"), (p["title"], f"projects/{p['slug']}.html")])]) + header(base, cur=f"projects/{p['slug']}.html") + f"""
 <main id="main">
-<section class="p-top">
-  <div class="wrap">
-    <a class="back mono ulink" href="{base}{pg("projects.html")}">{t("← All projects")}</a>
-    <div class="p-title rv"><span class="mono n">({num(idx[p['slug']])} / {len(DATA)})</span><h1 class="display">{e(p['title'])}</h1></div>
-    <dl class="p-meta rv">{dl}</dl>
-  </div>
+<section class="p-cover">
+    <div class="p-hero on-img"><div class="ph-in">{hero_media(p, base)}</div>
+      <div class="hx-shade" aria-hidden="true"></div>
+      <div class="pc-title"><h1 class="display">{e(p['title'])}</h1><span class="mono">{e(p['location'])}</span></div>
+    </div>
 </section>
-<div class="wrap"><div class="p-hero">{marks()}<div class="ph-in">{hero_media(p, base)}</div></div>
-<p class="mono muted figcap">Fig. 01 — Hero · 2400 × 1350 px</p></div>
 {chr(10).join(b for b in body if b)}
-<section class="cta-mini">
-  <div class="wrap cta-row rv">
-    <p class="display">{t("A similar project?")}</p>
-    <a class="btn" href="{base}index.html#contact">{t("Start a project")} <span class="ar">→</span></a>
-  </div>
-</section>
 <section class="next-sec">
-  <div class="wrap pn">
-    <a class="prev" href="{prv['slug']}.html"><span class="mono muted">{t("← Previous")} ({num(idx[prv['slug']])})</span><span class="t">{e(prv['title'])}</span></a>
-    <a class="next" href="{nxt['slug']}.html"><span class="mono muted">{t("Next")} ({num(idx[nxt['slug']])}) →</span><span class="t">{e(nxt['title'])}</span></a>
+  <div class="wrap">
+    <a class="p-next" href="{nxt['slug']}.html">
+      <span class="frame"><img src="{img(nxt, 'hero.jpg', base)}"{rs(nxt, 'hero.jpg', '100vw', base)} alt="" width="2400" height="1350" loading="lazy"></span>
+      <span class="hx-shade" aria-hidden="true"></span>
+      <span class="pn-cap"><span class="mono">{t("Next project")}</span><span class="pn-t">{e(nxt['title'])} <span class="ar">→</span></span></span>
+    </a>
   </div>
 </section>
+{contact_section(base)}
 </main>
 <div class="lightbox" aria-hidden="true">
   <button class="lb-close mono" type="button">{t("Close")}</button>
@@ -904,14 +993,43 @@ def pricing_page():
 """ + footer("")
 
 
+def services_page():
+    """Overview of the services: one large row per service, each with an image from the work, linking to its page."""
+    rows = []
+    for n, sv in enumerate(SVCS[:4]):
+        pr, pic = service_pic(n, sv)
+        inc = "".join(f"<li>{e(x)}</li>" for x in sv["includes"][:4])
+        rows.append(f"""    <a class="svrow rv{' flip' if n % 2 else ''}" href="{pg('services/' + sv['slug'] + '.html')}">
+      <span class="frame"><img src="{img(pr, pic)}"{rs(pr, pic, '(max-width:900px) 100vw, 50vw')} alt="" width="1800" height="1200" loading="lazy"></span>
+      <span class="sv-body"><span class="sv-t">{e(sv['short'])}</span><span class="sv-lead">{e(sv['lead'])}</span><ul class="mono">{inc}</ul><span class="mono sv-go">{t("Learn more")} <span class="ar">→</span></span></span>
+    </a>""")
+    local = SVCS[4] if len(SVCS) > 4 else None
+    loc_line = f"""<section class="teaser"><div class="wrap tz rv"><span class="mono label">(Santander)</span><div class="tz-body"><p class="tz-lead">{e(local['lead'])}</p><a class="mono ulink" href="{pg('services/' + local['slug'] + '.html')}">{e(local['short'])} →</a></div></div></section>""" if local else ""
+    return head(t("Services — dsgn·dm archviz"), t("Architectural visualization services: exterior and interior renders, animation and sales material for developments, from Santander, Spain."),
+                path="services.html", ld=[crumbs([(t("Home"), "index.html"), (t("Services"), "services.html")])]) + header("", home="index.html", cur="services.html") + f"""
+<main id="main">
+<section class="p-top">
+  <div class="wrap">
+    <span class="mono label">({t("Services")})</span>
+    <h1 class="display">{t("What<br>I do")}</h1>
+  </div>
+</section>
+<section style="padding-top:0">
+  <div class="wrap svlist">
+{chr(10).join(rows)}
+  </div>
+</section>
+{loc_line}
+{contact_section()}
+</main>
+""" + footer("")
+
+
 def service_page(sv):
     base = "../"
     li = lambda xs: "".join(f"<li>{e(x)}</li>" for x in xs)
     rel = [p for p in DATA if p["type"] in sv["types"]][:3]
-    cards = "\n".join(f"""      <a class="icard" href="{href(p, base)}">
-        <div class="frame"><img src="{img(p, 'index.jpg', base)}"{rs(p, 'index.jpg', '(max-width:700px) 100vw, 33vw', base)} alt="{e(p['title'])}" width="1200" height="800" loading="lazy"></div>
-        <div class="cap"><span class="mono n">{num(idx[p['slug']])}</span><h3>{e(p['title'])}</h3><span class="mono tag">{e(t(p['type']))} · {e(p['year'])}</span></div>
-      </a>""" for p in rel)
+    cards = "\n".join(pcard(p, base) for p in rel)
     faqs = "\n".join(f'        <details><summary><span class="mono n">{num(n + 1)}</span>{e(q)}</summary><p>{e(a)}</p></details>' for n, (q, a) in enumerate(sv["faqs"]))
     path = f"services/{sv['slug']}.html"
     ld = [crumbs([(t("Home"), "index.html"), (t("Services"), "index.html#services"), (sv["short"], path)]),
@@ -936,15 +1054,15 @@ def service_page(sv):
     </div>
   </div>
 </section>
-<section style="padding-top:0">
+{"" if not rel else f'''<section style="padding-top:0">
   <div class="wrap">
     <div class="sec-head rv"><div><span class="mono label">({t("Related work")})</span><h2 class="display">{t("Selected<br>projects")}</h2></div>
       <a class="mono ulink" href="{base}{pg("projects.html")}">{t("All projects →")}</a></div>
-    <div class="igrid">
+    <div class="pgrid">
 {cards}
     </div>
   </div>
-</section>
+</section>'''}
 <section class="cta-mini">
   <div class="wrap cta-row rv">
     <p class="display">{t("What would it cost?")}</p>
@@ -970,7 +1088,7 @@ def seo_files():
         print("  ! SITE_URL is empty: canonical URLs, hreflang, social previews, structured data and sitemap.xml are skipped. Set it in build.py.")
         return
     set_lang("en")
-    logical = ["index.html", "projects.html", "studio.html", "pricing.html"] + [f"services/{x['slug']}.html" for x in SVCS] + [f"projects/{p['slug']}.html" for p in DATA]
+    logical = ["index.html", "projects.html", "services.html", "about.html", "pricing.html", "contact.html"] + [f"services/{x['slug']}.html" for x in SVCS] + [f"projects/{p['slug']}.html" for p in DATA]
     ent = []
     for pth in logical:
         alts = "".join(f'<xhtml:link rel="alternate" hreflang="{l}" href="{canon(pth, l)}"/>' for l in ("en", "es"))
@@ -987,13 +1105,15 @@ def main():
         for d in ("projects", "services") if lang == "en" else ("proyectos", "servicios"):
             (out / d).mkdir(parents=True, exist_ok=True)
         files = {loc("index.html", lang): index_page(), loc("projects.html", lang): projects_page(), loc("pricing.html", lang): pricing_page(),
-                 loc("studio.html", lang): studio_page()}
+                 loc("about.html", lang): about_page(), loc("services.html", lang): services_page(), loc("contact.html", lang): contact_page()}
         for sv in SVCS:
             files[loc(f"services/{sv['slug']}.html", lang)] = service_page(sv)
         for p in DATA:
             files[loc(f"projects/{p['slug']}.html", lang)] = project_page(p)
         files[f"print/{lang}.html"] = print_page()
         for f, content in files.items():
+            # section headings on one line: the <br> in "What<br>I do" becomes a space (they still wrap on small screens)
+            content = re.sub(r'(<h[12][^>]*class="[^"]*display[^"]*"[^>]*>)(.*?)(</h[12]>)', lambda m: m.group(1) + m.group(2).replace("<br>", " ") + m.group(3), content, flags=re.S)
             (ROOT / f).write_text(content, encoding="utf-8")
         print(f"OK [{lang}]: {len(files)} pages")
     seo_files()

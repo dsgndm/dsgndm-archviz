@@ -32,7 +32,7 @@ tools/make_placeholders.py     Crea los placeholders que falten (con su tamaño 
 3. Si añades o quitas imágenes: cambia las listas `exterior` / `interior` del proyecto y ejecuta `python3 tools/make_placeholders.py` y `python3 build.py`.
 
 ### Tipos de imagen en galería (cada fila suma 12)
-`full` 12 col · 2400×1350 · `wide` 8 col · 2000×1125 · `half` 6 col · 1800×1200 · `tall` 4 col · 1200×1500  
+`full` 12 col · 2400×1350 · `wide` 8 col · 2000×1213 (misma altura que un `tall` al lado) · `half` 6 col · 1800×1200 · `tall` 4 col · 1200×1500  
 Combinaciones que cuadran: full · half+half · wide+tall · tall+tall+tall.
 
 ### Vídeo

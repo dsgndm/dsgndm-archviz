@@ -1,29 +1,21 @@
 {
-  "_note": "Spanish texts per project folder. Titles stay in English (they live in projects.json). Only summary, brief and approach are translated.",
-  "01-collective-housing": {
-    "summary": "Un bloque residencial leído a través del volumen, la luz y la calle.",
-    "brief": "Un bloque residencial que había que entender antes de construirlo: su volumen, su relación con la calle y la calidad de sus viviendas.",
-    "approach": "Las imágenes se construyen alrededor de una luz de última hora de la tarde que hace legibles los materiales, con alturas de cámara elegidas según cómo verán realmente el edificio las personas. Los interiores se amueblan para el uso real, no para un catálogo."
+  "_note": "Spanish texts per project folder. Titles stay in English (they live in projects.json).",
+  "la-gerra": {
+    "summary": "Un bloque residencial en la parte alta y más tranquila de Suances, visualizado desde la calle hasta los dormitorios.",
+    "description": "La Gerra es un bloque residencial en la parte alta y más tranquila de Suances, mostrado desde la calle, desde el aire y desde dentro de las viviendas.",
+    "brief": "Un conjunto completo de imágenes para presentar La Gerra, una promoción residencial en una zona apartada de Suances: cómo se asienta el edificio en la parcela, la piscina y los jardines comunes y cómo se viven las viviendas por dentro.",
+    "approach": "Los exteriores muestran el edificio a través de sus volúmenes en voladizo, su revestimiento cálido y sus terrazas ajardinadas, a pie de calle y desde el aire. La piscina y el jardín comunes tienen sus propias vistas, porque son un argumento de venta de la promoción. En el interior, una paleta serena y natural, con luz del día, vistas verdes y el mar en el horizonte, permite imaginar cada vivienda habitada."
   },
-  "02-private-house": {
-    "summary": "Paisaje e interior tratados como una única escena.",
-    "brief": "Una vivienda unifamiliar en la que paisaje e interior debían sentirse como una sola escena, con una atmósfera tranquila y cálida.",
-    "approach": "Los encuadres siguen la intención del arquitecto: vistas largas a través de los cristales, materiales honestos y luz diurna suave, con una vegetación modelada según el proyecto de paisajismo."
+  "quinta-atlantica": {
+    "summary": "Una promoción residencial frente al mar en Suances, visualizada desde el acceso a la calle hasta los dormitorios.",
+    "description": "Quinta Atlántica es una promoción residencial de bloques de baja altura sobre una ladera frente al mar, visualizada desde sus calles hasta sus dormitorios.",
+    "brief": "Un conjunto completo de imágenes para presentar Quinta Atlántica, una promoción de bloques de baja altura en Suances: cómo se asienta en la ladera, las zonas comunes y cómo se vive dentro de las viviendas.",
+    "approach": "Los exteriores leen el proyecto a través de sus propios materiales: lamas de madera, carpinterías oscuras y vidrio frente a jardines en terraza y el mar. Las cámaras buscan el horizonte entre los bloques y la luz de la tarde da profundidad a las fachadas. En los interiores, una paleta cálida y neutra, con luz natural y vistas al mar, permite imaginar las viviendas habitadas."
   },
-  "03-interior-design": {
-    "summary": "Materiales, mobiliario y luz natural compuestos estancia a estancia.",
-    "brief": "Una propuesta de interiorismo para validar materiales, mobiliario e iluminación con el cliente antes de comprar o construir nada.",
-    "approach": "Cada estancia se compone como una pequeña serie de vistas: un plano general para leer el espacio y otros más cercanos para los acabados que sostienen el diseño."
-  },
-  "04-public-building": {
-    "summary": "Imágenes y un recorrido virtual para una escala cívica mayor.",
-    "brief": "Un edificio de gran escala presentado mediante imágenes y un recorrido virtual, centrado en la orientación, la circulación y la imagen que proyecta en su contexto.",
-    "approach": "El recorrido sigue la ruta del visitante, desde la aproximación hasta el acceso y los espacios interiores clave, con movimientos de cámara pausados y entrega en Full HD."
-  },
-  "05-renovation": {"summary": "Una reforma de vivienda visualizada antes del primer día de obra."},
-  "06-retail-space": {"summary": "Un local comercial con identidad propia y materiales cuidadosamente elegidos."},
-  "07-facade": {"summary": "Una fachada integrada fotográficamente en su contexto urbano real."},
-  "08-kitchen": {"summary": "Cocina y zona de estar con luz natural."},
-  "09-landscape": {"summary": "Un espacio exterior y su vegetación al anochecer."},
-  "10-walkthrough": {"summary": "Un recorrido virtual animado de un edificio en Full HD."}
+  "novalinas": {
+    "summary": "Una promoción residencial en pleno centro de Torrelavega, mostrada desde su plaza peatonal hasta el salón.",
+    "description": "Novalinas es un edificio residencial en el centro de Torrelavega, mostrado a pie de calle, de noche y desde dentro de la vivienda.",
+    "brief": "Un conjunto de imágenes para presentar Novalinas, un nuevo edificio residencial en pleno centro de Torrelavega, a escasos metros de la catedral, entre las calles Novalinas y San Bartolomé: cómo encaja en la ciudad, el espacio público que lo rodea y lo que ofrecen las viviendas.",
+    "approach": "Las vistas se toman a la altura del peatón para que el edificio se lea como parte de la calle y de la nueva plaza. Las fachadas terracota, las cubiertas negras de metal y los balcones de lamas se muestran de día y al anochecer, cuando las ventanas encendidas y la plaza cobran vida. Dentro, un interior luminoso y cálido enseña las viviendas habitadas."
+  }
 }

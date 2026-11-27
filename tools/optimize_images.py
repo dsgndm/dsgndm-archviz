@@ -18,7 +18,7 @@ force = "--force" in sys.argv
 def main():
     made = saved = 0
     for src in sorted((ROOT / "assets").rglob("*")):
-        if src.suffix.lower() not in (".jpg", ".jpeg", ".png") or src.parent.name == "fonts" or src.name == "og.jpg":
+        if src.suffix.lower() not in (".jpg", ".jpeg", ".png") or src.parent.name == "fonts" or src.name == "og.jpg" or (src.parent.name == "brand" and src.suffix.lower() == ".png"):
             continue
         im = Image.open(src)
         im = im.convert("RGB") if im.mode not in ("RGB", "L") else im

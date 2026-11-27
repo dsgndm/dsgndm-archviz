@@ -10,8 +10,8 @@
     "wide": {
       "span": 8,
       "w": 2000,
-      "h": 1125,
-      "ratio": "16:9"
+      "h": 1213,
+      "ratio": "1.65:1 (same height as a tall beside it)"
     },
     "half": {
       "span": 6,
@@ -27,6 +27,126 @@
     }
   },
   "projects": [
+    {
+      "folder": "la-gerra",
+      "tier": "major",
+      "title": "La Gerra",
+      "type": "Residential",
+      "year": "",
+      "location": "Suances, Cantabria",
+      "client": "Inmobiliaria San Fernando",
+      "software": "3ds Max · D5 Render · AutoCAD · Photoshop",
+      "summary": "A residential block in the upper, quieter part of Suances, visualized from the street to the bedrooms.",
+      "description": "La Gerra is a residential block on the upper, quieter side of Suances, shown from the street, from above and from inside the homes.",
+      "brief": "A complete set of images to present La Gerra, a residential development in a secluded area of Suances: how the building sits on its plot, the communal pool and gardens, and what the homes feel like inside.",
+      "approach": "The exteriors show the building through its cantilevered volumes, warm cladding and planted terraces, from street level and from above. The communal pool and garden get their own views, since they are a selling point of the development. Inside, a calm, natural palette with daylight, green views and the sea on the horizon makes each home easy to picture lived in.",
+      "card": {
+        "w": 2400,
+        "h": 1350,
+        "ratio": "16:9"
+      },
+      "exterior": [
+        "full",
+        "half",
+        "half",
+        "wide",
+        "tall"
+      ],
+      "interior": [
+        "full",
+        "wide",
+        "tall",
+        "half",
+        "half",
+        "tall",
+        "tall",
+        "tall"
+      ],
+      "passes": false,
+      "video": null,
+      "spread": [
+        "exterior-01.jpg",
+        "interior-03.jpg"
+      ]
+    },
+    {
+      "folder": "quinta-atlantica",
+      "tier": "major",
+      "title": "Quinta Atlántica",
+      "type": "Residential",
+      "year": "",
+      "location": "Suances, Cantabria",
+      "client": "Inmobiliaria San Fernando",
+      "software": "3ds Max · D5 Render · AutoCAD · Photoshop",
+      "summary": "A sea-facing residential development in Suances, visualized from the street entrance to the bedrooms.",
+      "description": "Quinta Atlántica is a residential development of low-rise blocks set into a sea-facing slope, visualized from its streets to its bedrooms.",
+      "brief": "A complete set of images to present Quinta Atlántica, a development of low-rise blocks in Suances: how it sits on its slope, the communal areas and what the homes feel like inside.",
+      "approach": "The exteriors read the project through its own materials: timber louvres, dark frames and glass against terraced gardens and the sea. Cameras look for the horizon between the blocks, and late-afternoon light gives depth to the façades. Inside, a warm and neutral palette with natural light and sea views makes the homes easy to imagine lived in.",
+      "card": {
+        "w": 1200,
+        "h": 1500,
+        "ratio": "4:5"
+      },
+      "exterior": [
+        "full",
+        "half",
+        "half",
+        "full"
+      ],
+      "interior": [
+        "wide",
+        "tall",
+        "half",
+        "half",
+        "half",
+        "half",
+        "wide",
+        "tall"
+      ],
+      "passes": false,
+      "video": null,
+      "spread": [
+        "exterior-04.jpg",
+        "interior-02.jpg"
+      ]
+    },
+    {
+      "folder": "novalinas",
+      "tier": "major",
+      "title": "Novalinas",
+      "type": "Residential",
+      "year": "",
+      "location": "Torrelavega, Cantabria",
+      "client": "Inmobiliaria San Fernando",
+      "software": "3ds Max · D5 Render · AutoCAD · Photoshop",
+      "summary": "A residential development in the heart of Torrelavega, shown from its pedestrian square to the living room.",
+      "description": "Novalinas is a residential building in central Torrelavega, shown at street level, by night and from inside the home.",
+      "brief": "A set of images to present Novalinas, a new residential building in central Torrelavega, a few metres from the cathedral, between Novalinas and San Bartolomé streets: how it fits into the city, the public space around it and what the homes offer.",
+      "approach": "The views are taken at pedestrian height so the building is read as part of the street and the new square. The terracotta façades, black metal roofs and slatted balconies are shown in daylight and at dusk, when the lit windows and the square come to life. Inside, a bright, warm interior shows the homes lived in.",
+      "card": {
+        "w": 2400,
+        "h": 1350,
+        "ratio": "16:9"
+      },
+      "exterior": [
+        "half",
+        "half",
+        "full"
+      ],
+      "interior": [
+        "wide",
+        "tall"
+      ],
+      "passes": false,
+      "video": null,
+      "spread": [
+        "exterior-03.jpg",
+        "interior-02.jpg"
+      ]
+    }
+  ],
+  "_story_template": "OPTIONAL, per project. Add to any project to show a 'Case study' block and/or a client quote: \"story\": {\"challenge\": \"...\", \"solution\": \"...\", \"result\": \"...\"}, \"quote\": {\"text\": \"...\", \"name\": \"...\", \"role\": \"...\"}. Spanish versions go in projects.es.json under the same folder name.",
+  "_placeholder_projects": [
     {
       "folder": "01-collective-housing",
       "tier": "major",
@@ -278,6 +398,5 @@
       ],
       "interior": []
     }
-  ],
-  "_story_template": "OPTIONAL, per project. Add to any project to show a 'Case study' block and/or a client quote: \"story\": {\"challenge\": \"...\", \"solution\": \"...\", \"result\": \"...\"}, \"quote\": {\"text\": \"...\", \"name\": \"...\", \"role\": \"...\"}. Spanish versions go in projects.es.json under the same folder name."
+  ]
 }
