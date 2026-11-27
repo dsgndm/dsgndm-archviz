@@ -11,7 +11,7 @@
   --pad:clamp(20px,3.6vw,56px); --gap:clamp(14px,1.8vw,28px);
   --ease:cubic-bezier(.22,.8,.2,1);
   --display:"Archivo","Helvetica Neue",Arial,sans-serif;
-  --mono:"Plex Mono",ui-monospace,Menlo,monospace;
+  --mono:"Archivo","Helvetica Neue",Arial,sans-serif;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;border-radius:0}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
@@ -25,7 +25,7 @@ p{text-wrap:pretty}
 ::selection{background:var(--blue);color:var(--on-accent)}
 :focus-visible{outline:2px solid var(--blue);outline-offset:4px}
 
-.mono{font-family:var(--mono);font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;font-weight:400;line-height:1.5}
+.mono{font-family:var(--mono);font-size:13.5px;letter-spacing:0;text-transform:none;font-weight:400;line-height:1.5;font-stretch:104%}
 .blue{color:var(--blue)}
 .muted{color:var(--muted)}
 .wrap{padding-inline:var(--pad);position:relative;z-index:1}
@@ -34,7 +34,7 @@ p{text-wrap:pretty}
 /* Thin blue underline link */
 .ulink{background:linear-gradient(var(--blue),var(--blue)) 0 100%/100% 1px no-repeat;padding-bottom:3px;transition:background-size .5s var(--ease),color .3s}
 .ulink:hover{background-size:0 1px;background-position:100% 100%;color:var(--blue)}
-.btn{display:inline-flex;align-items:center;gap:14px;padding:17px 28px;background:var(--blue);color:var(--on-accent);font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;transition:background .4s var(--ease)}
+.btn{display:inline-flex;align-items:center;gap:14px;padding:17px 28px;background:var(--blue);color:var(--on-accent);font-family:var(--mono);font-size:13.5px;letter-spacing:0;text-transform:none;transition:background .4s var(--ease)}
 .btn:hover{background:var(--ink)}
 .btn .ar{display:inline-block;transition:transform .5s var(--ease)}
 .btn:hover .ar{transform:translateX(4px)}
@@ -48,7 +48,7 @@ p{text-wrap:pretty}
 .logo{display:block;line-height:0}.logo-img{height:clamp(28px,2.3vw,34px);width:auto}
 .foot-brand .logo-img{height:40px}
 .nav-desktop{display:flex;gap:clamp(18px,2.4vw,38px)}
-.nav-desktop a{font-family:var(--mono);font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink);position:relative;padding-block:4px}
+.nav-desktop a{font-family:var(--mono);font-size:13.5px;letter-spacing:0;text-transform:none;color:var(--ink);position:relative;padding-block:4px}
 .nav-desktop a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--blue);transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
 .nav-desktop a:hover::after{transform:scaleX(1)}
 .head-right{justify-self:end;display:flex;align-items:center;gap:clamp(16px,2vw,28px)}
@@ -57,8 +57,8 @@ p{text-wrap:pretty}
 .lang .on{color:var(--ink)}
 .lang i{font-style:normal;opacity:.5}
 .lang a{transition:color .3s}.lang a:hover{color:var(--blue)}
-.mobile-menu a.mm-lang{margin-top:28px;font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;font-weight:400;color:var(--blue)}
-.menu-btn{display:none;justify-self:end;font-family:var(--mono);font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink)}
+.mobile-menu a.mm-lang{margin-top:28px;font-family:var(--mono);font-size:13px;letter-spacing:0;text-transform:none;font-weight:400;color:var(--blue)}
+.menu-btn{display:none;justify-self:end;font-family:var(--mono);font-size:13.5px;letter-spacing:0;text-transform:none;color:var(--ink)}
 .mobile-menu{position:fixed;inset:0;z-index:40;background:var(--bg);display:flex;flex-direction:column;justify-content:center;gap:4px;padding:var(--pad);transform:translateY(-100%);transition:transform .7s var(--ease);visibility:hidden}
 .mobile-menu.open{transform:none;visibility:visible}
 .mobile-menu a{font-family:var(--display);font-stretch:118%;font-weight:200;font-size:clamp(40px,12vw,68px);letter-spacing:-.04em;line-height:1.12;color:var(--ink)}
@@ -417,7 +417,7 @@ body.leaving{opacity:0;transition:opacity .3s ease}
 /* Cursor label on cards and gallery images */
 .cur{position:fixed;left:0;top:0;z-index:90;width:68px;height:68px;display:grid;place-items:center;background:var(--blue);color:var(--on-accent);pointer-events:none;opacity:0;scale:.4;transition:opacity .3s var(--ease),scale .5s var(--ease)}
 .cur.on{opacity:1;scale:1}
-.cur span{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+.cur span{font-family:var(--mono);font-size:13.5px;letter-spacing:0;text-transform:none}
 
 /* Small details */
 .btn:active{scale:.98}
@@ -494,12 +494,12 @@ details[open] p{animation:fadeup .55s var(--ease)}
 .vid{background:var(--bg);color:var(--ink);padding:clamp(56px,7vw,112px) 0;margin-block:clamp(24px,3vw,48px)}
 .vid .vframe{background:var(--bg-2)}
 .lightbox{color:var(--ink)}
-.sticky-cta{position:fixed;right:var(--pad);bottom:16px;z-index:60;display:none;padding:14px 20px;background:var(--blue);color:var(--on-accent);font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;transform:translateY(calc(100% + 24px));opacity:0;transition:transform .6s var(--ease),opacity .4s var(--ease),background .3s}
+.sticky-cta{position:fixed;right:var(--pad);bottom:16px;z-index:60;display:none;padding:14px 20px;background:var(--blue);color:var(--on-accent);font-family:var(--mono);font-size:13.5px;letter-spacing:0;text-transform:none;transform:translateY(calc(100% + 24px));opacity:0;transition:transform .6s var(--ease),opacity .4s var(--ease),background .3s}
 .sticky-cta.show{transform:none;opacity:1}
 .sticky-cta:hover{background:var(--ink)}
 @media (max-width:900px){.sticky-cta{display:block}}
 
-.skip{position:fixed;left:var(--pad);top:-60px;z-index:200;padding:12px 18px;background:var(--ink);color:var(--bg);font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;transition:top .3s var(--ease)}
+.skip{position:fixed;left:var(--pad);top:-60px;z-index:200;padding:12px 18px;background:var(--ink);color:var(--bg);font-family:var(--mono);font-size:13.5px;letter-spacing:0;text-transform:none;transition:top .3s var(--ease)}
 .skip:focus{top:12px}
 .phold{opacity:1}
 
@@ -612,7 +612,7 @@ body,.site-header,.mobile-menu,.site-footer{transition:background-color .5s var(
 .theme-sw .knob::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--bg);transform:translate(5px,-4px) scale(0);transition:transform .5s var(--ease) .05s}
 html[data-theme="dark"] .theme-sw .knob{transform:translateX(20px)}
 html[data-theme="dark"] .theme-sw .knob::after{transform:translate(4px,-3px) scale(1)}
-.mobile-menu .theme-row{margin-top:18px;display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.mobile-menu .theme-row{margin-top:18px;display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:13.5px;letter-spacing:0;text-transform:none;color:var(--muted)}
 /* the new theme is revealed in a circle growing from the switch */
 html.theme-anim::view-transition-old(root){animation:none}
 html.theme-anim::view-transition-new(root){mix-blend-mode:normal}
@@ -821,3 +821,25 @@ html[data-theme="dark"] :is(.label,.mono.blue,.ulink:hover){color:#5464FF}
 .studio-fig .frame{aspect-ratio:1/1}
 @media (max-width:900px){.studio-fig{grid-column:1/-1;max-width:420px}}
 @media (max-width:900px){.studio-copy{grid-column:1/-1}}
+
+/* One typeface and no capitals across the whole site */
+html,body,button,input,select,textarea{font-family:var(--display)}
+*{text-transform:none!important}
+.label{font-size:13.5px;letter-spacing:0}
+
+/* ---------- Home services: 50/50, each description under its name (space kept, so nothing moves) ---------- */
+.sl-rows{grid-column:1/7}
+.sl-side{grid-column:7/13}
+.sl-caps{display:none}
+.sl-d{display:block;padding-top:10px}
+.sl-d>span{display:block;color:var(--muted);font-size:clamp(16px,1.15vw,19px);line-height:1.5;max-width:40ch;transition:color .5s var(--ease)}
+.sl-row.on .sl-d>span{color:var(--ink-2)}
+.sl-t{font-size:clamp(32px,3.6vw,60px)}
+@media (max-width:900px){.sl-d>span{color:var(--ink-2)}}
+
+/* ---------- Services page: same rhythm as the rest of the site ---------- */
+.svlist{gap:clamp(56px,6vw,96px)}
+.sv-body{gap:16px}
+.sv-body ul{gap:4px}
+.p-top+section{padding-top:0}
+main>section.teaser{padding:clamp(56px,6vw,96px) 0}
