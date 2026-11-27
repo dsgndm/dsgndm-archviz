@@ -780,3 +780,44 @@ html[data-theme="dark"] :is(.label,.mono.blue,.ulink:hover){color:#5464FF}
 .fgrid>.fcard:first-child .fc-cap{padding:26px 30px 30px}
 .fc-t{font-size:clamp(24px,2.3vw,38px)}
 @media (max-width:700px){.fgrid>.fcard,.fgrid-4>.fcard{grid-column:1/-1}.fgrid>.fcard:first-child .fc-frame{aspect-ratio:4/3}}
+
+/* ---------- Page headings always on one line (js/main.js shrinks them to fit) ---------- */
+:is(.sec-head h2.display,.p-top h1.display,.cta-band .display,.contact h1.display,.contact h2.display,.compare h2.display){white-space:nowrap;max-width:none}
+.sec-head>div{min-width:0}
+
+/* Home icon in the menu */
+.nav-home{display:inline-flex;align-items:center;padding:4px 0}
+.nav-home svg{display:block}
+.nav-home::after{display:none}
+
+/* ---------- Selected work: name, place and the slide marks sit inside the image ---------- */
+.fcard{background:none}
+.fc-shade{position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(to top,rgba(9,9,9,.62) 0%,rgba(9,9,9,.18) 30%,rgba(9,9,9,0) 50%)}
+.fc-cap{position:absolute;left:0;right:0;bottom:0;z-index:4;display:grid;grid-template-columns:1fr auto;row-gap:6px;align-items:end;padding:clamp(18px,2vw,30px)!important;color:#fff}
+.fc-cap .fc-dots{position:static;grid-column:1/-1;margin-bottom:10px}
+.fc-cap .fc-t{color:#fff}
+.fc-cap .fc-m{color:rgba(255,255,255,.82)}
+.fc-cap .fc-go{color:#fff;grid-row:2/4}
+.fgrid>.fcard:first-child .fc-frame{aspect-ratio:2.2/1}
+@media (max-width:700px){.fgrid>.fcard .fc-frame,.fgrid>.fcard:first-child .fc-frame{aspect-ratio:4/5}}
+
+/* ---------- Figures: four, counting up, with a line of context ---------- */
+.nfs{grid-template-columns:repeat(4,minmax(0,1fr));row-gap:48px}
+.nf strong{font-size:clamp(52px,6.4vw,112px);font-variant-numeric:tabular-nums}
+.nf p{color:var(--ink-2);font-size:.92em;max-width:28ch;margin-top:4px}
+@media (max-width:1000px){.nfs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.nfs{grid-template-columns:1fr}}
+
+/* ---------- Home services: the image now leads ---------- */
+.sl-rows{grid-column:1/6}
+.sl-side{grid-column:6/13}
+.sl-pic{aspect-ratio:4/3}
+.sl-t{font-size:clamp(32px,4vw,68px)}
+.sl-row{padding:clamp(16px,1.6vw,24px) 0}
+
+/* ---------- About: portrait smaller, square, no corner marks ---------- */
+.studio-fig{grid-column:1/5}
+.studio-copy{grid-column:6/13}
+.studio-fig .frame{aspect-ratio:1/1}
+@media (max-width:900px){.studio-fig{grid-column:1/-1;max-width:420px}}
+@media (max-width:900px){.studio-copy{grid-column:1/-1}}

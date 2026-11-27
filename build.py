@@ -260,7 +260,8 @@ def header(base="", home=None, cur=None):
     if home is None:
         home = f"{base}index.html" if base else ""
     links = NAV(base)
-    nav = "".join(f'<a href="{h}">{x}</a>' for x, h in links)
+    home_i = f'<a class="nav-home" href="{base}index.html" aria-label="{t("Home")}"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M3 9.2 10 3l7 6.2V17h-4.6v-4.6H7.6V17H3z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></a>'
+    nav = home_i + "".join(f'<a href="{h}">{x}</a>' for x, h in links)
     desk, mob = lang_links(cur)
     return f"""<body id="page">
 <a class="skip" href="#main">{t("Skip to content")}</a>
@@ -270,7 +271,7 @@ def header(base="", home=None, cur=None):
   <div class="head-right">{desk}<button class="theme-sw" type="button" role="switch" aria-checked="false" aria-label="{t('Dark mode')}"><span class="knob"></span></button><a class="btn head-cta" href="{base}{pg('contact.html')}">{t("Let’s talk")}</a></div>
   <button class="menu-btn" type="button" aria-label="{t('Open menu')}">{t("Menu")}</button>
 </header>
-<div class="mobile-menu" aria-label="Menu">{nav}{mob}<div class="theme-row"><button class="theme-sw" type="button" role="switch" aria-checked="false" aria-label="{t('Dark mode')}"><span class="knob"></span></button><span>{t("Dark mode")}</span></div></div>
+<div class="mobile-menu" aria-label="Menu"><a href="{base}index.html">{t("Home")}</a>{"".join(f'<a href="{h}">{x}</a>' for x, h in links)}{mob}<div class="theme-row"><button class="theme-sw" type="button" role="switch" aria-checked="false" aria-label="{t('Dark mode')}"><span class="knob"></span></button><span>{t("Dark mode")}</span></div></div>
 """
 
 
@@ -331,8 +332,8 @@ def spread(p, n):
     imgs = "".join(f'<img class="fc-img{" on" if k == 0 else ""}" src="{img(p, x)}"{rs(p, x, "(max-width:700px) 100vw, " + ("100vw" if n == 0 else "50vw"))} alt="{e(p["title"]) if k == 0 else ""}" width="1800" height="1200" loading="lazy">' for k, x in enumerate(names))
     dots = "".join(f'<i{" class=on" if k == 0 else ""}></i>' for k in range(len(names)))
     return f"""    <a class="fcard rv" href="{href(p)}" style="--d:{n}">
-      <span class="fc-frame">{imgs}<span class="fc-dots" aria-hidden="true">{dots}</span></span>
-      <span class="fc-cap"><span class="fc-t">{e(p['title'])}</span><span class="mono fc-m">{e(p['location'])}</span><span class="fc-go" aria-hidden="true">→</span></span>
+      <span class="fc-frame">{imgs}<span class="fc-shade" aria-hidden="true"></span>
+        <span class="fc-cap"><span class="fc-dots" aria-hidden="true">{dots}</span><span class="fc-t">{e(p['title'])}</span><span class="mono fc-m">{e(p['location'])}</span><span class="fc-go" aria-hidden="true">→</span></span></span>
     </a>"""
 
 
@@ -372,7 +373,7 @@ def row(p):
 def portrait(base=""):
     """Studio portrait: line drawing rebuilt with WebGL particles (js/main.js, .pp). The drawing itself is the fallback."""
     src = f"{ab(base)}assets/brand/{PORTRAIT}"
-    return f"""<div class="frame pp" data-src="{src}">{marks()}
+    return f"""<div class="frame pp" data-src="{src}">
         <img class="pp-still" src="{src}" alt="{t("Portrait of Diego Moreno, line drawing")}" width="1230" height="1279" loading="lazy">
         <canvas aria-hidden="true"></canvas></div>"""
 
@@ -436,8 +437,20 @@ def compare_block():
 
 
 def figures():
-    figs = "".join(f'<div class="nf"><strong>{ph(x["value"])}</strong><span class="mono">{e(x["label"])}</span></div>' for x in SITE["stats"][:3])
-    return f"""<section class="numbers"><div class="wrap nfs rv">{figs}</div></section>"""
+    """Key figures: big numbers that count up when they appear, each with a short line of context."""
+    def val(v):
+        if v.strip().startswith("["):
+            return ph(v)
+        num_part = "".join(ch for ch in v if ch.isdigit())
+        rest = v.replace(num_part, "", 1) if num_part else v
+        return f'<span class="cnt" data-to="{num_part}" data-pad="{len(num_part)}">{num_part}</span>{e(rest)}' if num_part else e(v)
+    figs = "".join(f'<div class="nf"><strong>{val(x["value"])}</strong><span class="mono">{e(x["label"])}</span>{f"<p>{e(x[chr(110)+chr(111)+chr(116)+chr(101)])}</p>" if x.get("note") else ""}</div>' for x in SITE["stats"][:4])
+    return f"""<section class="numbers">
+  <div class="wrap">
+    <div class="sec-head rv"><div><span class="mono label">({t("In figures")})</span><h2 class="display">{t("The studio in figures")}</h2></div></div>
+    <div class="nfs rv">{figs}</div>
+  </div>
+</section>"""
 
 
 def pause():
@@ -688,7 +701,6 @@ def about_page():
   <div class="wrap studio">
     <figure class="studio-fig rv">
       {portrait()}
-      <figcaption class="mono">Fig. — Diego Moreno · Santander</figcaption>
     </figure>
     <div class="studio-copy rv">
       <div><p class="studio-lead">{t("Drawings become images that are <em>understood, felt</em> and approved.")}</p></div>

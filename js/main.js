@@ -612,3 +612,50 @@ var DM_ES = document.documentElement.lang === "es";
     r.addEventListener("focus", function () { show(k); });
   });
 })();
+
+
+/* ===== Headings on one line: shrink the type until the heading fits its row ===== */
+(function () {
+  "use strict";
+  var hs = [].slice.call(document.querySelectorAll(".sec-head h2.display, .p-top h1.display, .cta-band .display, .contact h1.display, .contact h2.display, .compare h2.display"));
+  if (!hs.length) return;
+  function fit() {
+    hs.forEach(function (h) {
+      h.style.fontSize = ""; h.style.whiteSpace = "";
+      var wrap = h.closest(".wrap") || h.parentElement, cs = getComputedStyle(wrap);
+      var room = wrap.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      var row = h.closest(".sec-head, .cta-row");
+      if (row) [].forEach.call(row.children, function (c) { if (!c.contains(h)) room -= c.getBoundingClientRect().width + 32; });
+      h.style.whiteSpace = "";
+      var size = parseFloat(getComputedStyle(h).fontSize), guard = 0;
+      while (h.scrollWidth > room && size > 24 && guard++ < 60) { size *= .95; h.style.fontSize = size + "px"; }
+      /* a very long title that would become too small on one line wraps instead */
+      if (h.scrollWidth > room) { h.style.whiteSpace = "normal"; h.style.fontSize = "28px"; }
+    });
+  }
+  fit();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  var t; window.addEventListener("resize", function () { clearTimeout(t); t = setTimeout(fit, 120); });
+})();
+
+/* ===== Figures count up once when they come into view ===== */
+(function () {
+  "use strict";
+  var els = [].slice.call(document.querySelectorAll(".cnt[data-to]"));
+  if (!els.length || !("IntersectionObserver" in window) || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  els.forEach(function (el) {
+    var to = +el.dataset.to, pad = +el.dataset.pad || 1;
+    el.textContent = String(0).padStart(pad, "0");
+    var io = new IntersectionObserver(function (es) {
+      if (!es[0].isIntersecting) return;
+      io.disconnect();
+      var t0 = performance.now(), dur = 1600 + to * 12;
+      (function step(now) {
+        var k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 4);
+        el.textContent = String(Math.round(to * e)).padStart(pad, "0");
+        if (k < 1) requestAnimationFrame(step);
+      })(t0);
+    }, { threshold: .6 });
+    io.observe(el);
+  });
+})();

@@ -3,19 +3,23 @@
   "stats": [
     {
       "value": "16+",
-      "label": "Años de experiencia"
+      "label": "Años de experiencia",
+      "note": "Visualizando arquitectura, interiores y promociones inmobiliarias."
     },
     {
       "value": "[ 000 ]",
-      "label": "Proyectos entregados"
+      "label": "Proyectos entregados",
+      "note": "Desde una sola imagen hasta kits de venta completos."
     },
     {
       "value": "02",
-      "label": "Rondas de cambios incluidas"
+      "label": "Rondas de cambios incluidas",
+      "note": "Incluidas en cada precio cerrado, antes de cualquier extra."
     },
     {
       "value": "[ 00 ]",
-      "label": "Clientes recurrentes"
+      "label": "Clientes recurrentes",
+      "note": "Promotoras y estudios que vuelven para la siguiente fase."
     }
   ],
   "clients": [

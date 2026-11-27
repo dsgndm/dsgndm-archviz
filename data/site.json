@@ -3,19 +3,23 @@
   "stats": [
     {
       "value": "16+",
-      "label": "Years of experience"
+      "label": "Years of experience",
+      "note": "Visualizing architecture, interiors and real-estate developments."
     },
     {
       "value": "[ 000 ]",
-      "label": "Projects delivered"
+      "label": "Projects delivered",
+      "note": "From a single image to complete sales kits."
     },
     {
       "value": "02",
-      "label": "Revision rounds included"
+      "label": "Revision rounds included",
+      "note": "Included in every closed price, before any extra cost."
     },
     {
       "value": "[ 00 ]",
-      "label": "Repeat clients"
+      "label": "Repeat clients",
+      "note": "Developers and studios that come back for the next phase."
     }
   ],
   "clients": [
