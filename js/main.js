@@ -712,3 +712,26 @@ var DM_ES = document.documentElement.lang === "es";
     io.observe(box);
   });
 })();
+
+/* ===== Projects page: filter by scope (exteriors / interiors / animation) ===== */
+(function () {
+  "use strict";
+  var bts = [].slice.call(document.querySelectorAll(".flt"));
+  var grid = document.querySelector(".pgrid");
+  if (!bts.length || !grid) return;
+  var cards = [].slice.call(grid.querySelectorAll(".pcard"));
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches, t;
+  bts.forEach(function (bt) {
+    bt.addEventListener("click", function () {
+      var f = bt.dataset.f;
+      bts.forEach(function (o) { o.classList.toggle("on", o === bt); o.setAttribute("aria-pressed", o === bt); });
+      function apply() {
+        cards.forEach(function (c) { c.hidden = !(f === "all" || (" " + c.dataset.scope + " ").indexOf(" " + f + " ") > -1); });
+        grid.classList.remove("fading");
+      }
+      clearTimeout(t);
+      if (reduce) return apply();
+      grid.classList.add("fading"); t = setTimeout(apply, 320);
+    });
+  });
+})();

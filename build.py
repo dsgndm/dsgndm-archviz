@@ -329,7 +329,7 @@ def spread(p, n):
     """Featured project card on the home: one frame whose images change with a soft horizontal wipe."""
     names = [x for x in ["hero.jpg", "exterior-01.jpg", "interior-01.jpg", "exterior-02.jpg", "interior-02.jpg"]
              if (ROOT / "assets" / "projects" / p["folder"] / x).exists()][:4]
-    imgs = "".join(f'<img class="fc-img{" on" if k == 0 else ""}" src="{img(p, x)}"{rs(p, x, "(max-width:700px) 100vw, " + ("100vw" if n == 0 else "50vw"))} alt="{e(p["title"]) if k == 0 else ""}" width="1800" height="1200" loading="lazy">' for k, x in enumerate(names))
+    imgs = "".join(f'<img class="fc-img{" on" if k == 0 else ""}" src="{img(p, x)}"{rs(p, x, "(max-width:700px) 100vw, " + "50vw")} alt="{e(p["title"]) if k == 0 else ""}" width="1800" height="1200" loading="lazy">' for k, x in enumerate(names))
     dots = "".join(f'<i{" class=on" if k == 0 else ""}></i>' for k in range(len(names)))
     return f"""    <a class="fcard rv" href="{href(p)}" style="--d:{n}">
       <span class="fc-frame">{imgs}<span class="fc-shade" aria-hidden="true"></span>
@@ -340,7 +340,7 @@ def spread(p, n):
 def pcard(p, base="", sizes="(max-width:700px) 100vw, (max-width:1100px) 50vw, 33vw", heading="h3"):
     """Project card used in every project grid: image, name, location and image count. No numbers."""
     count = len(p["exterior"]) + len(p["interior"])
-    return f"""      <a class="pcard" href="{href(p, base)}" data-n="{idx[p['slug']]}" data-title="{e(p['title'])}" data-loc="{e(p['location'])}" data-type="{e(t(p['type']))}">
+    return f"""      <a class="pcard" href="{href(p, base)}" data-scope="{' '.join(k for k, ok in (('ext', p['exterior']), ('int', p['interior']), ('vid', p.get('video'))) if ok)}" data-n="{idx[p['slug']]}" data-title="{e(p['title'])}" data-loc="{e(p['location'])}" data-type="{e(t(p['type']))}">
         <span class="frame"><img src="{img(p, 'index.jpg', base)}"{rs(p, 'index.jpg', sizes, base)} alt="{e(p['title'])}" width="1200" height="800" loading="lazy"></span>
         <span class="pc-cap"><{heading} class="pc-t">{e(p['title'])}</{heading}><span class="ar" aria-hidden="true">→</span>
           <span class="mono pc-m">{typ(p)}{e(p['location'])}</span></span>
@@ -506,7 +506,7 @@ def pricing_hook():
 
 
 def index_page():
-    works = "\n".join(spread(p, n) for n, p in enumerate(MAJOR[:5]))
+    works = "\n".join(spread(p, n) for n, p in enumerate(MAJOR[:6]))
     svc_items = '<p class="tz-list mono">' + "".join(f'<a href="{pg("services/" + x["slug"] + ".html")}">{e(x["short"])}</a>' for x in SVCS[:4]) + "</p>"
     return head(t("dsgn·dm archviz — Architectural visualization"),
                 t("Architectural visualization studio in Santander, Spain. Stills, animation and sales material for architects, developers and interior designers."),
@@ -519,7 +519,7 @@ def index_page():
 <section id="work">
   <div class="wrap">
     <div class="sec-head rv"><div><span class="mono label">({t("Work")})</span><h2 class="display">{t("Selected<br>work")}</h2></div></div>
-    <div class="fgrid fgrid-{min(len(MAJOR), 5)}">
+    <div class="fgrid fgrid-even">
 {works}
     </div>
     <a class="all-link rv" href="{pg("projects.html")}"><span>{t("All projects")}</span><span class="mono">{num(len(DATA))}</span><span class="ar" aria-hidden="true">→</span></a>
@@ -581,12 +581,12 @@ def contact_page():
 # ---------------------------------------------------------------- projects index
 def projects_page():
     base = ""
-    types = []
-    for p in DATA:
-        if p["type"] not in types:
-            types.append(p["type"])
-    filters = '<button class="flt on" type="button" data-filter="all">{} <sup>{}</sup></button>'.format(t("All"), len(DATA)) + "".join(
-        f'<button class="flt" type="button" data-filter="{e(t(ty))}">{e(t(ty))} <sup>{sum(1 for p in DATA if p["type"] == ty)}</sup></button>' for ty in types)
+    scopes = [(k, lbl, [p for p in DATA if f(p)]) for k, lbl, f in (
+        ("ext", t("Exteriors"), lambda p: bool(p["exterior"])),
+        ("int", t("Interiors"), lambda p: bool(p["interior"])),
+        ("vid", t("Animation"), lambda p: bool(p.get("video"))))]
+    filters = f'<div class="flts" role="group" aria-label="{t("Filter projects")}"><button class="flt on" type="button" data-f="all" aria-pressed="true">{t("All")}<sup>{len(DATA)}</sup></button>' + "".join(
+        f'<button class="flt" type="button" data-f="{k}" aria-pressed="false">{lbl}<sup>{len(ps)}</sup></button>' for k, lbl, ps in scopes if ps) + '</div>'
     cards = "\n".join(pcard(p, heading="h2") for p in DATA)
     return head(t("Projects — dsgn·dm archviz"), t("All architectural visualization projects by dsgn·dm archviz: residential, interiors, exteriors, commercial and animation."), path="projects.html",
                 ld=[crumbs([(t("Home"), "index.html"), (t("Projects"), "projects.html")])]) + header("", home="index.html", cur="projects.html") + f"""
@@ -595,7 +595,7 @@ def projects_page():
   <div class="wrap">
     <span class="mono label">({t("Projects")})</span>
     <h1 class="display">{t("All<br>projects")}</h1>
-    {sorter() if len(DATA) > 6 else ""}
+    {filters}
   </div>
 </section>
 <section style="padding-top:0">

@@ -927,3 +927,33 @@ main>section.teaser{padding:clamp(56px,6vw,96px) 0}
   .sec-head{flex-direction:column;align-items:flex-start;gap:12px}
   .sec-head .meta{text-align:left}
 }
+/* ===== Mobile heroes: short, centred, gentle camera move (home and projects) ===== */
+@keyframes panc{
+  from{transform:translateX(calc((var(--fw) - 100%) / 2 + (100% - var(--fw)) * .16))}
+  to{transform:translateX(calc((var(--fw) - 100%) / 2 - (100% - var(--fw)) * .16))}
+}
+@media (max-width:900px) and (orientation:portrait){
+  .hx-img{animation:panc var(--hx-dur,12s) cubic-bezier(.37,0,.63,1) both paused}
+  .hx-img.on{animation-play-state:running}
+  .p-hero .ph-in :is(img,video){animation:panc 22s cubic-bezier(.37,0,.63,1) infinite alternate}
+}
+@media (max-width:900px) and (orientation:portrait) and (prefers-reduced-motion:reduce){
+  .hx-img,.p-hero .ph-in :is(img,video){animation:none!important;transform:translateX(calc((var(--fw) - 100%) / 2))}
+}
+/* ===== Home "Selected work": an even grid of two columns; no oversized first card (the hero already shows it big) ===== */
+.fgrid.fgrid-even{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:clamp(28px,3vw,48px)}
+.fgrid.fgrid-even>.fcard,.fgrid.fgrid-even>.fcard:first-child{grid-column:auto}
+.fgrid.fgrid-even>.fcard .fc-frame,.fgrid.fgrid-even>.fcard:first-child .fc-frame{aspect-ratio:3/2}
+.fgrid.fgrid-even>.fcard:first-child .fc-t{font-size:clamp(24px,2.3vw,38px)}
+@media (max-width:700px){
+  .fgrid.fgrid-even{grid-template-columns:1fr}
+  .fgrid.fgrid-even>.fcard .fc-frame,.fgrid.fgrid-even>.fcard:first-child .fc-frame{aspect-ratio:4/5}
+}
+/* Projects filter: quiet text tabs */
+.flts{display:flex;flex-wrap:wrap;gap:4px 26px;margin-top:clamp(24px,3vw,40px)}
+.flt{font:inherit;font-size:16px;color:var(--muted);padding:6px 0;border-bottom:1px solid transparent;transition:color .3s var(--ease),border-color .3s var(--ease)}
+.flt sup{font-size:.68em;margin-left:3px;vertical-align:super;color:inherit}
+.flt:hover{color:var(--ink)}
+.flt.on{color:var(--ink);border-color:var(--ink)}
+.pgrid .pcard{transition:opacity .32s var(--ease)}
+.pgrid.fading .pcard{opacity:0}
