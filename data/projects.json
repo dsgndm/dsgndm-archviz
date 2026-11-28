@@ -63,7 +63,10 @@
         "tall"
       ],
       "passes": false,
-      "video": null,
+      "video": {
+        "youtube": "y01STmXEV4w",
+        "ambient": true
+      },
       "spread": [
         "exterior-01.jpg",
         "interior-03.jpg"
@@ -180,6 +183,45 @@
       "spread": [
         "exterior-01.jpg",
         "exterior-03.jpg"
+      ]
+    },
+    {
+      "folder": "abra-de-la-marina",
+      "tier": "major",
+      "title": "Abra de la Marina",
+      "type": "Residential",
+      "year": "",
+      "location": "Soto de la Marina, Cantabria",
+      "client": "TUCAN Promociones",
+      "software": "3ds Max · D5 Render · Photoshop",
+      "summary": "Eleven detached homes around a private lane, with gardens, covered porches and large windows.",
+      "description": "Abra de la Marina is a development of eleven detached homes in Soto de la Marina, shown in exterior views by day and at dusk.",
+      "brief": "A set of exterior images to present Abra de la Marina, eleven detached homes in Soto de la Marina: the houses and their gardens, the porches and entrances, the private lane that links them, and the life the development offers.",
+      "approach": "Clean white volumes, warm timber cladding and dark frames under a clear late-afternoon sky. The views go from the whole house to the porch, the entrance and the garden, with people using the spaces so each home reads as lived in. An aerial view explains the plot, and a dusk shot closes the set with the windows lit.",
+      "card": {
+        "w": 2400,
+        "h": 1350,
+        "ratio": "16:9"
+      },
+      "exterior": [
+        "full",
+        "wide",
+        "tall",
+        "half",
+        "half",
+        "full",
+        "half",
+        "half",
+        "wide",
+        "tall",
+        "full"
+      ],
+      "interior": [],
+      "passes": false,
+      "video": null,
+      "spread": [
+        "exterior-01.jpg",
+        "exterior-11.jpg"
       ]
     }
   ],

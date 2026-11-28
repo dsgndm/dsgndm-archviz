@@ -505,7 +505,7 @@ def pricing_hook():
 
 
 def index_page():
-    works = "\n".join(spread(p, n) for n, p in enumerate(MAJOR[:4]))
+    works = "\n".join(spread(p, n) for n, p in enumerate(MAJOR[:5]))
     svc_items = '<p class="tz-list mono">' + "".join(f'<a href="{pg("services/" + x["slug"] + ".html")}">{e(x["short"])}</a>' for x in SVCS[:4]) + "</p>"
     return head(t("dsgn·dm archviz — Architectural visualization"),
                 t("Architectural visualization studio in Santander, Spain. Stills, animation and sales material for architects, developers and interior designers."),
@@ -518,7 +518,7 @@ def index_page():
 <section id="work">
   <div class="wrap">
     <div class="sec-head rv"><div><span class="mono label">({t("Work")})</span><h2 class="display">{t("Selected<br>work")}</h2></div></div>
-    <div class="fgrid fgrid-{min(len(MAJOR), 4)}">
+    <div class="fgrid fgrid-{min(len(MAJOR), 5)}">
 {works}
     </div>
     <a class="all-link rv" href="{pg("projects.html")}"><span>{t("All projects")}</span><span class="mono">{num(len(DATA))}</span><span class="ar" aria-hidden="true">→</span></a>

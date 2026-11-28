@@ -866,3 +866,6 @@ main>section.teaser{padding:clamp(56px,6vw,96px) 0}
 .vamb.on .vamb-media{opacity:1}
 .vid .gal-head{display:flex;justify-content:space-between;align-items:baseline}
 .vlink{font-size:14px}
+/* 5 featured: one large + two pairs */
+.fgrid-5>.fcard{grid-column:span 3}
+@media (max-width:700px){.fgrid-5>.fcard{grid-column:1/-1}}
