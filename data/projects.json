@@ -73,6 +73,48 @@
       ]
     },
     {
+      "folder": "penaherbosa-27",
+      "tier": "major",
+      "title": "Peñaherbosa 27",
+      "type": "Residential",
+      "year": "",
+      "location": "Santander, Cantabria",
+      "client": "Inmobiliaria San Fernando",
+      "software": "3ds Max · D5 Render · Photoshop",
+      "summary": "Six homes in Puertochico, Santander, shown from the inside: light, calm materials and room to live.",
+      "description": "Peñaherbosa 27 is a building of six homes in Puertochico, Santander, shown through its interiors and an animation.",
+      "brief": "A set of interior images and a video to present Peñaherbosa 27, six homes in Puertochico, Santander: the living and dining spaces, the kitchen, the bedrooms and the bathroom, with the finishes chosen for the building.",
+      "approach": "Soft daylight filtered through sheer curtains sets a calm, warm tone. A restrained palette of greige joinery, light oak, veined marble and black fittings carries through every room, so the homes read as one coherent design. Wide views explain the layout, close-ups show the finishes, and people in the scenes make each room feel lived in. The video moves through the same light.",
+      "card": {
+        "w": 2400,
+        "h": 1350,
+        "ratio": "16:9"
+      },
+      "exterior": [],
+      "interior": [
+        "full",
+        "wide",
+        "tall",
+        "half",
+        "half",
+        "wide",
+        "tall",
+        "half",
+        "half",
+        "wide",
+        "tall"
+      ],
+      "passes": false,
+      "video": {
+        "youtube": "_Mhjko3etG0",
+        "ambient": true
+      },
+      "spread": [
+        "interior-01.jpg",
+        "interior-02.jpg"
+      ]
+    },
+    {
       "folder": "quinta-atlantica",
       "tier": "major",
       "title": "Quinta Atlántica",
@@ -114,40 +156,6 @@
       ]
     },
     {
-      "folder": "novalinas",
-      "tier": "major",
-      "title": "Novalinas",
-      "type": "Residential",
-      "year": "",
-      "location": "Torrelavega, Cantabria",
-      "client": "Inmobiliaria San Fernando",
-      "software": "3ds Max · D5 Render · AutoCAD · Photoshop",
-      "summary": "A residential development in the heart of Torrelavega, shown from its pedestrian square to the living room.",
-      "description": "Novalinas is a residential building in central Torrelavega, shown at street level, by night and from inside the home.",
-      "brief": "A set of images to present Novalinas, a new residential building in central Torrelavega, a few metres from the cathedral, between Novalinas and San Bartolomé streets: how it fits into the city, the public space around it and what the homes offer.",
-      "approach": "The views are taken at pedestrian height so the building is read as part of the street and the new square. The terracotta façades, black metal roofs and slatted balconies are shown in daylight and at dusk, when the lit windows and the square come to life. Inside, a bright, warm interior shows the homes lived in.",
-      "card": {
-        "w": 2400,
-        "h": 1350,
-        "ratio": "16:9"
-      },
-      "exterior": [
-        "half",
-        "half",
-        "full"
-      ],
-      "interior": [
-        "wide",
-        "tall"
-      ],
-      "passes": false,
-      "video": null,
-      "spread": [
-        "exterior-03.jpg",
-        "interior-02.jpg"
-      ]
-    },
-    {
       "folder": "amura",
       "tier": "major",
       "title": "Amura",
@@ -171,8 +179,8 @@
         "tall",
         "half",
         "half",
-        "wide",
-        "tall"
+        "half",
+        "half"
       ],
       "interior": [],
       "passes": false,
@@ -222,6 +230,40 @@
       "spread": [
         "exterior-01.jpg",
         "exterior-11.jpg"
+      ]
+    },
+    {
+      "folder": "novalinas",
+      "tier": "major",
+      "title": "Novalinas",
+      "type": "Residential",
+      "year": "",
+      "location": "Torrelavega, Cantabria",
+      "client": "Inmobiliaria San Fernando",
+      "software": "3ds Max · D5 Render · AutoCAD · Photoshop",
+      "summary": "A residential development in the heart of Torrelavega, shown from its pedestrian square to the living room.",
+      "description": "Novalinas is a residential building in central Torrelavega, shown at street level, by night and from inside the home.",
+      "brief": "A set of images to present Novalinas, a new residential building in central Torrelavega, a few metres from the cathedral, between Novalinas and San Bartolomé streets: how it fits into the city, the public space around it and what the homes offer.",
+      "approach": "The views are taken at pedestrian height so the building is read as part of the street and the new square. The terracotta façades, black metal roofs and slatted balconies are shown in daylight and at dusk, when the lit windows and the square come to life. Inside, a bright, warm interior shows the homes lived in.",
+      "card": {
+        "w": 2400,
+        "h": 1350,
+        "ratio": "16:9"
+      },
+      "exterior": [
+        "half",
+        "half",
+        "full"
+      ],
+      "interior": [
+        "wide",
+        "tall"
+      ],
+      "passes": false,
+      "video": null,
+      "spread": [
+        "exterior-03.jpg",
+        "interior-02.jpg"
       ]
     }
   ],

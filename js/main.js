@@ -618,15 +618,15 @@ var DM_ES = document.documentElement.lang === "es";
 /* ===== Headings on one line: shrink the type until the heading fits its row ===== */
 (function () {
   "use strict";
-  var hs = [].slice.call(document.querySelectorAll(".sec-head h2.display, .p-top h1.display, .cta-band .display, .contact h1.display, .contact h2.display, .compare h2.display"));
+  var hs = [].slice.call(document.querySelectorAll(".sec-head h2.display, .p-top h1.display, .cta-band .display, .contact h1.display, .contact h2.display, .compare h2.display, .pc-title h1.display"));
   if (!hs.length) return;
   function fit() {
     hs.forEach(function (h) {
       h.style.fontSize = ""; h.style.whiteSpace = "";
       var wrap = h.closest(".wrap") || h.parentElement, cs = getComputedStyle(wrap);
       var room = wrap.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
-      var row = h.closest(".sec-head, .cta-row");
-      if (row) [].forEach.call(row.children, function (c) { if (!c.contains(h)) room -= c.getBoundingClientRect().width + 32; });
+      var row = h.closest(".sec-head, .cta-row, .pc-title");
+      if (row && getComputedStyle(row).flexDirection !== "column") [].forEach.call(row.children, function (c) { if (!c.contains(h)) room -= c.getBoundingClientRect().width + 32; });
       h.style.whiteSpace = "";
       var size = parseFloat(getComputedStyle(h).fontSize), guard = 0;
       while (h.scrollWidth > room && size > 24 && guard++ < 60) { size *= .95; h.style.fontSize = size + "px"; }

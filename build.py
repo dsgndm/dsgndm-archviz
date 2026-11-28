@@ -637,11 +637,25 @@ def gallery_group(p, group, title, base, start_no):
 YT_PARAMS = "autoplay=1&mute=1&controls=0&loop=1&playlist={id}&modestbranding=1&rel=0&playsinline=1&iv_load_policy=3&disablekb=1&fs=0"
 
 
+def hero_vid(p, base):
+    """Ambient video in the project hero: returns (class + data attributes for .ph-in, sound link)."""
+    v = p.get("video") or {}
+    if not v.get("ambient"):
+        return ('"', "")
+    yid, src = v.get("youtube", ""), v.get("src", "")
+    data = (f' data-yt="https://www.youtube-nocookie.com/embed/{yid}?{YT_PARAMS.format(id=yid)}"' if yid else "") + \
+           (f' data-mp4="{ab(base)}assets/projects/{p["folder"]}/{src}"' if src else "")
+    link = f'<a class="ph-sound" href="https://youtu.be/{yid}" target="_blank" rel="noopener">{t("Watch with sound")} <span aria-hidden="true">↗</span></a>' if yid else ""
+    return (f' vamb"{data}', link)
+
+
 def video_block(p, base):
     v = p.get("video")
     if v is None:
         return ""
     if v.get("ambient"):
+        return ""  # shown in the hero instead
+    if False:
         # Silent, looping, no controls: plays by itself when it comes into view (YouTube id or an mp4 next to the images)
         yid, src = v.get("youtube", ""), v.get("src", "")
         data = (f' data-yt="https://www.youtube-nocookie.com/embed/{yid}?{YT_PARAMS.format(id=yid)}"' if yid else "") + \
@@ -870,9 +884,9 @@ def project_page(p):
                 ld=[crumbs([(t("Home"), "index.html"), (t("Projects"), "projects.html"), (p["title"], f"projects/{p['slug']}.html")])]) + header(base, cur=f"projects/{p['slug']}.html") + f"""
 <main id="main">
 <section class="p-cover">
-    <div class="p-hero on-img"><div class="ph-in">{hero_media(p, base)}</div>
+    <div class="p-hero on-img"><div class="ph-in{hero_vid(p, base)[0]}>{hero_media(p, base)}</div>
       <div class="hx-shade" aria-hidden="true"></div>
-      <div class="pc-title"><h1 class="display">{e(p['title'])}</h1><span class="mono">{e(p['location'])}</span></div>
+      <div class="pc-title"><h1 class="display">{e(p['title'])}</h1><span class="pc-side"><span class="mono">{e(p['location'])}</span>{hero_vid(p, base)[1]}</span></div>
     </div>
 </section>
 {chr(10).join(b for b in body if b)}

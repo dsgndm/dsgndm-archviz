@@ -869,3 +869,14 @@ main>section.teaser{padding:clamp(56px,6vw,96px) 0}
 /* 5 featured: one large + two pairs */
 .fgrid-5>.fcard{grid-column:span 3}
 @media (max-width:700px){.fgrid-5>.fcard{grid-column:1/-1}}
+/* ===== Project hero with ambient video ===== */
+.ph-in.vamb{container-type:size}
+.ph-in.vamb iframe.vamb-media{left:50%;top:50%;translate:-50% -50%;width:calc(max(100cqw,177.78cqh) * 1.18);height:calc(max(100cqh,56.25cqw) * 1.18)}
+.ph-in.vamb video.vamb-media{object-fit:cover}
+.ph-in.vamb.on>img{opacity:0;transition:opacity 1s var(--ease) .4s}
+.pc-side{display:flex;flex-direction:column;align-items:flex-end;gap:10px;padding-bottom:.6em}
+.pc-side .mono{padding-bottom:0}
+.ph-sound{color:#fff;font-size:14px;text-decoration:none;opacity:.8;border-bottom:1px solid rgba(255,255,255,.4);padding-bottom:2px;white-space:nowrap;transition:opacity .3s var(--ease),border-color .3s var(--ease)}
+.ph-sound:hover{opacity:1;border-color:#fff}
+@media (max-width:900px){.pc-side{align-items:flex-start;padding:0;gap:8px}}
+.pc-title h1.display{white-space:nowrap}
