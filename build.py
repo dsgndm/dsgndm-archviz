@@ -634,7 +634,7 @@ def gallery_group(p, group, title, base, start_no):
     return out, no
 
 
-YT_PARAMS = "autoplay=1&mute=1&controls=0&loop=1&playlist={id}&modestbranding=1&rel=0&playsinline=1&iv_load_policy=3&disablekb=1&fs=0"
+YT_PARAMS = "enablejsapi=1&autoplay=1&mute=1&controls=0&loop=1&playlist={id}&modestbranding=1&rel=0&playsinline=1&iv_load_policy=3&disablekb=1&fs=0"
 
 
 def hero_vid(p, base):
@@ -654,14 +654,12 @@ def video_block(p, base):
     if v is None:
         return ""
     if v.get("ambient"):
-        return ""  # shown in the hero instead
-    if False:
         # Silent, looping, no controls: plays by itself when it comes into view (YouTube id or an mp4 next to the images)
         yid, src = v.get("youtube", ""), v.get("src", "")
         data = (f' data-yt="https://www.youtube-nocookie.com/embed/{yid}?{YT_PARAMS.format(id=yid)}"' if yid else "") + \
                (f' data-mp4="{ab(base)}assets/projects/{p["folder"]}/{src}"' if src else "")
         link = f'<a class="ulink vlink" href="https://youtu.be/{yid}" target="_blank" rel="noopener">{t("Watch with sound on YouTube")} ↗</a>' if yid else ""
-        return f"""<section class="vid" id="video">
+        return f"""<section class="vid-top" id="video">
   <div class="wrap">
     <div class="gal-head rv"><span class="mono label">({t("Animation")})</span>{link}</div>
     <div class="vframe vamb rv"{data}>
@@ -872,11 +870,7 @@ def project_page(p):
     inter, no = gallery_group(p, "interior", "Interiors", base, no)
     # video before stills for the animation-first project
     first_video = p["type"] == "Animation"
-    body = [brief, story_block(p)]
-    if first_video:
-        body += [video_block(p, base), ext, inter]
-    else:
-        body += [video_block(p, base), ext, inter]
+    body = [video_block(p, base), brief, story_block(p), ext, inter]
     body += [passes_block(p, base), quote_block(p)]
 
     prv = DATA[(i - 1) % len(DATA)]
@@ -884,9 +878,9 @@ def project_page(p):
                 ld=[crumbs([(t("Home"), "index.html"), (t("Projects"), "projects.html"), (p["title"], f"projects/{p['slug']}.html")])]) + header(base, cur=f"projects/{p['slug']}.html") + f"""
 <main id="main">
 <section class="p-cover">
-    <div class="p-hero on-img"><div class="ph-in{hero_vid(p, base)[0]}>{hero_media(p, base)}</div>
+    <div class="p-hero on-img"><div class="ph-in">{hero_media(p, base)}</div>
       <div class="hx-shade" aria-hidden="true"></div>
-      <div class="pc-title"><h1 class="display">{e(p['title'])}</h1><span class="pc-side"><span class="mono">{e(p['location'])}</span>{hero_vid(p, base)[1]}</span></div>
+      <div class="pc-title"><h1 class="display">{e(p['title'])}</h1><span class="pc-side"><span class="mono">{e(p['location'])}</span></span></div>
     </div>
 </section>
 {chr(10).join(b for b in body if b)}

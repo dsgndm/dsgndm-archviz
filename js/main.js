@@ -680,11 +680,28 @@ var DM_ES = document.documentElement.lang === "es";
         el.setAttribute("muted", ""); el.setAttribute("playsinline", "");
         el.addEventListener("playing", function () { box.classList.add("on"); });
       } else if (box.dataset.yt) {
+        /* Shown only once YouTube reports that it is playing. If the video cannot be embedded
+           (owner disabled it, blocked, error) the iframe is removed and the still image stays. */
         el = document.createElement("iframe");
-        el.src = box.dataset.yt; el.title = "Video"; el.tabIndex = -1;
+        el.src = box.dataset.yt + "&origin=" + encodeURIComponent(location.origin); el.title = "Video"; el.tabIndex = -1;
         el.allow = "autoplay; encrypted-media; picture-in-picture";
-        el.setAttribute("loading", "lazy");
-        el.addEventListener("load", function () { setTimeout(function () { box.classList.add("on"); }, 1200); });
+        var done = false, give = setTimeout(fail, 15000);
+        function play() { if (done) return; done = true; clearTimeout(give); setTimeout(function () { box.classList.add("on"); }, 500); }
+        function fail() { if (done) return; done = true; window.removeEventListener("message", onMsg); if (el.parentNode) el.parentNode.removeChild(el); }
+        function onMsg(m) {
+          if (m.source !== el.contentWindow) return;
+          var d; try { d = typeof m.data === "string" ? JSON.parse(m.data) : m.data; } catch (x) { return; }
+          if (!d) return;
+          if (d.event === "onError") fail();
+          else if ((d.event === "onStateChange" && d.info === 1) || (d.event === "infoDelivery" && d.info && d.info.playerState === 1)) play();
+        }
+        window.addEventListener("message", onMsg);
+        el.addEventListener("load", function () {
+          var k = 0, hello = setInterval(function () {
+            if (done || k++ > 20) return clearInterval(hello);
+            try { el.contentWindow.postMessage(JSON.stringify({ event: "listening", id: 1, channel: "widget" }), "*"); } catch (x) {}
+          }, 250);
+        });
       } else { return; }
       el.className = "vamb-media";
       box.appendChild(el);
