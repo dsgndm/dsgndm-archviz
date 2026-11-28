@@ -87,7 +87,7 @@ var DM_ES = document.documentElement.lang === "es";
     var capN = stage.querySelector(".hx-n"), capT = stage.querySelector(".hx-t"),
         capD = stage.querySelector(".hx-d"), capL = stage.querySelector(".hx-l");
     /* phones in portrait: each render pans slowly, at constant speed, so the slides last longer */
-    var i = 0, timer = null, DUR = matchMedia("(max-width:900px) and (orientation:portrait)").matches ? 12000 : 6000;
+    var i = 0, timer = null, DUR = matchMedia("(max-width:900px) and (orientation:portrait)").matches ? 8000 : 6000;
     document.documentElement.style.setProperty("--hx-dur", DUR + "ms");
     function show(n) {
       i = (n + imgs.length) % imgs.length;
@@ -726,6 +726,7 @@ var DM_ES = document.documentElement.lang === "es";
       var f = bt.dataset.f;
       bts.forEach(function (o) { o.classList.toggle("on", o === bt); o.setAttribute("aria-pressed", o === bt); });
       function apply() {
+        grid.dataset.f = f; /* the CSS swaps to the interior / exterior thumbnail where there is one */
         cards.forEach(function (c) { c.hidden = !(f === "all" || (" " + c.dataset.scope + " ").indexOf(" " + f + " ") > -1); });
         grid.classList.remove("fading");
       }

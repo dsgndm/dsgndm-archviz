@@ -337,11 +337,21 @@ def spread(p, n):
     </a>"""
 
 
-def pcard(p, base="", sizes="(max-width:700px) 100vw, (max-width:1100px) 50vw, 33vw", heading="h3"):
+def alt_thumbs(p, sizes, base=""):
+    """Extra thumbnails for the projects filter: an interior view shown when filtering by interiors, and vice versa."""
+    out = ""
+    for k in ("int", "ext"):
+        n = f"index_{k}.jpg"
+        if (ROOT / "assets" / "projects" / p["folder"] / n).exists():
+            out += f'<img class="alt alt-{k}" src="{img(p, n, base)}"{rs(p, n, sizes, base)} alt="" width="1200" height="800" loading="lazy">'
+    return out
+
+
+def pcard(p, base="", sizes="(max-width:700px) 100vw, (max-width:1100px) 50vw, 33vw", heading="h3", alts=False):
     """Project card used in every project grid: image, name, location and image count. No numbers."""
     count = len(p["exterior"]) + len(p["interior"])
     return f"""      <a class="pcard" href="{href(p, base)}" data-scope="{' '.join(k for k, ok in (('ext', p['exterior']), ('int', p['interior']), ('vid', p.get('video'))) if ok)}" data-n="{idx[p['slug']]}" data-title="{e(p['title'])}" data-loc="{e(p['location'])}" data-type="{e(t(p['type']))}">
-        <span class="frame"><img src="{img(p, 'index.jpg', base)}"{rs(p, 'index.jpg', sizes, base)} alt="{e(p['title'])}" width="1200" height="800" loading="lazy"></span>
+        <span class="frame"><img src="{img(p, 'index.jpg', base)}"{rs(p, 'index.jpg', sizes, base)} alt="{e(p['title'])}" width="1200" height="800" loading="lazy">{alt_thumbs(p, sizes, base) if alts else ""}</span>
         <span class="pc-cap"><{heading} class="pc-t">{e(p['title'])}</{heading}><span class="ar" aria-hidden="true">→</span>
           <span class="mono pc-m">{typ(p)}{e(p['location'])}</span></span>
       </a>"""
@@ -587,7 +597,7 @@ def projects_page():
         ("vid", t("Animation"), lambda p: bool(p.get("video"))))]
     filters = f'<div class="flts" role="group" aria-label="{t("Filter projects")}"><button class="flt on" type="button" data-f="all" aria-pressed="true">{t("All")}<sup>{len(DATA)}</sup></button>' + "".join(
         f'<button class="flt" type="button" data-f="{k}" aria-pressed="false">{lbl}<sup>{len(ps)}</sup></button>' for k, lbl, ps in scopes if ps) + '</div>'
-    cards = "\n".join(pcard(p, heading="h2") for p in DATA)
+    cards = "\n".join(pcard(p, heading="h2", alts=True) for p in DATA)
     return head(t("Projects — dsgn·dm archviz"), t("All architectural visualization projects by dsgn·dm archviz: residential, interiors, exteriors, commercial and animation."), path="projects.html",
                 ld=[crumbs([(t("Home"), "index.html"), (t("Projects"), "projects.html")])]) + header("", home="index.html", cur="projects.html") + f"""
 <main id="main">

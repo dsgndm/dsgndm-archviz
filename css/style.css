@@ -957,3 +957,23 @@ main>section.teaser{padding:clamp(56px,6vw,96px) 0}
 .flt.on{color:var(--ink);border-color:var(--ink)}
 .pgrid .pcard{transition:opacity .32s var(--ease)}
 .pgrid.fading .pcard{opacity:0}
+/* Projects filter: the thumbnail follows the filter (interior view under "Interiors") */
+.pcard .frame .alt{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;clip-path:inset(0 100% 0 0)}
+.pgrid[data-f="int"] .pcard .alt-int,.pgrid[data-f="ext"] .pcard .alt-ext{opacity:1;animation:fcWipe 1.1s var(--wipe) both}
+@media (prefers-reduced-motion:reduce){.pgrid[data-f="int"] .pcard .alt-int,.pgrid[data-f="ext"] .pcard .alt-ext{clip-path:none}}
+
+/* Home hero on phones: shorter slides; camera drift only (no zoom) */
+@media (max-width:900px) and (orientation:portrait){
+  .hx-img{animation:panc var(--hx-dur,8s) cubic-bezier(.37,0,.63,1) both paused}
+  .hx-img.on{animation-play-state:running}
+}
+@media (max-width:900px) and (orientation:portrait) and (prefers-reduced-motion:reduce){
+  .hx-img{animation:none!important}
+}
+/* Home hero on desktop: a very slow, gentle push-in on each project; the outgoing image keeps its frame while it fades */
+@keyframes hxzoom{from{transform:scale(1)}to{transform:scale(1.06)}}
+@media not ((max-width:900px) and (orientation:portrait)){
+  .hx-img{transform:none;transition:opacity 1.4s var(--ease);animation:hxzoom calc(var(--hx-dur,6s) + 1.6s) cubic-bezier(.33,0,.67,1) both paused}
+  .hx-img.on{transform:none;animation-play-state:running}
+}
+@media (prefers-reduced-motion:reduce){.hx-img{animation:none!important}}
