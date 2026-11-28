@@ -479,6 +479,7 @@ def services_strip():
         rows.append(f"""      <a class="sl-row{' on' if n == 0 else ''}" data-i="{n}" href="{pg('services/' + sv['slug'] + '.html')}">
         <span class="sl-t">{e(sv['short'])}</span>
         <span class="sl-d"><span>{e(sv['lead'])}</span></span>
+        <img class="sl-mimg" src="{img(pr, pic)}"{rs(pr, pic, "40vw")} alt="" width="1200" height="1500" loading="lazy">
       </a>""")
     return f"""<section class="svc-list">
   <div class="wrap">
@@ -662,9 +663,7 @@ def video_block(p, base):
         return f"""<section class="vid-top" id="video">
   <div class="wrap">
     <div class="gal-head rv"><span class="mono label">({t("Animation")})</span>{link}</div>
-    <div class="vframe vamb rv"{data}>
-      <img src="{img(p, 'video-poster.jpg', base)}"{rs(p, 'video-poster.jpg', '100vw', base)} alt="{e(p['title'])} — {t("video poster")}" width="1920" height="1080" loading="lazy">
-    </div>
+    <div class="vframe vamb rv"{data} role="img" aria-label="{e(p['title'])} — {t("Animation")}"><span class="vload" aria-hidden="true"></span></div>
   </div>
 </section>"""
     src, emb = v.get("src", ""), v.get("embed", "")

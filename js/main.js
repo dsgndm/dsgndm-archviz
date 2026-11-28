@@ -86,7 +86,9 @@ var DM_ES = document.documentElement.lang === "es";
     var items = [].slice.call(document.querySelectorAll(".hx-item"));
     var capN = stage.querySelector(".hx-n"), capT = stage.querySelector(".hx-t"),
         capD = stage.querySelector(".hx-d"), capL = stage.querySelector(".hx-l");
-    var i = 0, timer = null, DUR = 6000;
+    /* phones in portrait: each render pans slowly, at constant speed, so the slides last longer */
+    var i = 0, timer = null, DUR = matchMedia("(max-width:900px) and (orientation:portrait)").matches ? 12000 : 6000;
+    document.documentElement.style.setProperty("--hx-dur", DUR + "ms");
     function show(n) {
       i = (n + imgs.length) % imgs.length;
       imgs.forEach(function (im, k) {
@@ -672,13 +674,14 @@ var DM_ES = document.documentElement.lang === "es";
     var io = new IntersectionObserver(function (es) {
       if (!es[0].isIntersecting) return;
       io.disconnect();
-      if (reduce) return; /* keep the still frame */
+      if (reduce) { box.hidden = true; return; } /* no autoplaying film; the YouTube link stays */
       var el;
       if (box.dataset.mp4) {
         el = document.createElement("video");
         el.src = box.dataset.mp4; el.muted = true; el.loop = true; el.autoplay = true; el.playsInline = true;
         el.setAttribute("muted", ""); el.setAttribute("playsinline", "");
         el.addEventListener("playing", function () { box.classList.add("on"); });
+        el.addEventListener("error", function () { box.hidden = true; });
       } else if (box.dataset.yt) {
         /* Shown only once YouTube reports that it is playing. If the video cannot be embedded
            (owner disabled it, blocked, error) the iframe is removed and the still image stays. */
@@ -687,7 +690,7 @@ var DM_ES = document.documentElement.lang === "es";
         el.allow = "autoplay; encrypted-media; picture-in-picture";
         var done = false, give = setTimeout(fail, 15000);
         function play() { if (done) return; done = true; clearTimeout(give); setTimeout(function () { box.classList.add("on"); }, 500); }
-        function fail() { if (done) return; done = true; window.removeEventListener("message", onMsg); if (el.parentNode) el.parentNode.removeChild(el); }
+        function fail() { if (done) return; done = true; window.removeEventListener("message", onMsg); if (el.parentNode) el.parentNode.removeChild(el); box.hidden = true; }
         function onMsg(m) {
           if (m.source !== el.contentWindow) return;
           var d; try { d = typeof m.data === "string" ? JSON.parse(m.data) : m.data; } catch (x) { return; }
@@ -705,7 +708,7 @@ var DM_ES = document.documentElement.lang === "es";
       } else { return; }
       el.className = "vamb-media";
       box.appendChild(el);
-    }, { threshold: .35 });
+    }, { threshold: 0, rootMargin: "400px 0px" });
     io.observe(box);
   });
 })();
